@@ -1,0 +1,281 @@
+{
+  "sourceLanguage": "zh-Hans",
+  "strings": {
+    "启动本机 CarPlay": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start CarPlay on This iPhone"
+          }
+        }
+      }
+    },
+    "启动 CarPlay 接收屏": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start CarPlay Receiver"
+          }
+        }
+      }
+    },
+    "读取当前 Wi-Fi": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use Current Wi-Fi Network"
+          }
+        }
+      }
+    },
+    "开放网络（无密码）": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Network (No Password)"
+          }
+        }
+      }
+    },
+    "编辑当前预设": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit Current Preset"
+          }
+        }
+      }
+    },
+    "选择同名预设": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select the Preset with the Same Name"
+          }
+        }
+      }
+    },
+    "浏览器": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Browser"
+          }
+        }
+      }
+    },
+    "浏览器接收页": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Browser Receiver Page"
+          }
+        }
+      }
+    },
+    "在本机浏览器打开": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open in This Device’s Browser"
+          }
+        }
+      }
+    },
+    "由 iPhone 输出": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play Audio on iPhone"
+          }
+        }
+      }
+    },
+    "显示车辆按钮": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show Vehicle Button"
+          }
+        }
+      }
+    },
+    "后台与画中画": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Background and Picture in Picture"
+          }
+        }
+      }
+    },
+    "画中画开启时机": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When to Start Picture in Picture"
+          }
+        }
+      }
+    },
+    "锁屏与后台继续运行": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep Running While Locked or in the Background"
+          }
+        }
+      }
+    },
+    "预设比例": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preset Aspect Ratios"
+          }
+        }
+      }
+    },
+    "正在启动本机 CarPlay…": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Starting CarPlay on this iPhone…"
+          }
+        }
+      }
+    },
+    "正在连接 CarPlay…": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connecting to CarPlay…"
+          }
+        }
+      }
+    },
+    "正在显示 CarPlay": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Displaying CarPlay"
+          }
+        }
+      }
+    },
+    "正在等待车机连接…": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for the head unit to connect…"
+          }
+        }
+      }
+    },
+    "请先连接 Wi-Fi。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connect to Wi-Fi first."
+          }
+        }
+      }
+    },
+    "启动前请输入 Wi-Fi 名称。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter the Wi-Fi network name before starting."
+          }
+        }
+      }
+    },
+    "请先停止 CarPlay": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop CarPlay first"
+          }
+        }
+      }
+    },
+    "请先启动 CarPlay": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start CarPlay first"
+          }
+        }
+      }
+    },
+    "CarPlay 已停止": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CarPlay stopped"
+          }
+        }
+      }
+    },
+    "已是最新发布版本": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You’re using the latest release"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}
