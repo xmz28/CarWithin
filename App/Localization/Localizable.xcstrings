@@ -3022,6 +3022,23 @@
         }
       }
     },
+    "{1} 将重新握手尝试另一份已保存密钥。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "{1} Reconnecting to try another saved key."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "{1} 将重新握手尝试另一份已保存密钥。"
+          }
+        }
+      }
+    },
     "{1} 屏幕 {2}×{3}（像素比 {4}，{5} Hz，H.265 {6}硬解{7}）": {
       "extractionState": "manual",
       "localizations": {
@@ -3035,6 +3052,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "{1} 屏幕 {2}×{3}（像素比 {4}，{5} Hz，H.265 {6}硬解{7}）"
+          }
+        }
+      }
+    },
+    "{1} 已停止自动重试。可在「车辆配对」重新扫描，或删除旧记录后重新配对。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "{1} Automatic retries have stopped. Scan again in Vehicle Pairing, or delete the old record and pair again."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "{1} 已停止自动重试。可在「车辆配对」重新扫描，或删除旧记录后重新配对。"
           }
         }
       }
@@ -3786,6 +3820,40 @@
         }
       }
     },
+    "不是支持的九号蓝牙广播": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unsupported Ninebot Bluetooth advertisement"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不是支持的九号蓝牙广播"
+          }
+        }
+      }
+    },
+    "不自动连接": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Do Not Connect Automatically"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不自动连接"
+          }
+        }
+      }
+    },
     "中继已连接，等待车机配对或投屏。": {
       "extractionState": "manual",
       "localizations": {
@@ -4092,6 +4160,40 @@
         }
       }
     },
+    "九号蓝牙广播校验失败": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ninebot Bluetooth advertisement checksum failed"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "九号蓝牙广播校验失败"
+          }
+        }
+      }
+    },
+    "九号蓝牙广播格式不完整": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Incomplete Ninebot Bluetooth advertisement"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "九号蓝牙广播格式不完整"
+          }
+        }
+      }
+    },
     "九号解码恢复": {
       "extractionState": "manual",
       "localizations": {
@@ -4312,6 +4414,40 @@
         }
       }
     },
+    "仪表已主动结束导航，会话已停止。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The dashboard ended navigation. The session has stopped."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "仪表已主动结束导航，会话已停止。"
+          }
+        }
+      }
+    },
+    "仪表已主动结束导航，正在确认退出；不会自动重新开启。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The dashboard ended navigation. Acknowledging the exit and leaving navigation off."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "仪表已主动结束导航，正在确认退出；不会自动重新开启。"
+          }
+        }
+      }
+    },
     "仪表已回应，正在发送画面": {
       "extractionState": "manual",
       "localizations": {
@@ -4342,6 +4478,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "仪表已回应，等待发送画面…"
+          }
+        }
+      }
+    },
+    "仪表已确认导航开启。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The dashboard confirmed that navigation is on."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "仪表已确认导航开启。"
           }
         }
       }
@@ -4393,6 +4546,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "仪表已连接，等待 CarPlay 画面。"
+          }
+        }
+      }
+    },
+    "仪表开启导航确认超时。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Timed out waiting for the dashboard to confirm navigation."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "仪表开启导航确认超时。"
           }
         }
       }
@@ -4562,6 +4732,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "会话启动超时（链路={1}，认证={2}，识别={3}）"
+          }
+        }
+      }
+    },
+    "会话已断开；停止指令未完整发送。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disconnected before the stop command could be sent in full."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "会话已断开；停止指令未完整发送。"
           }
         }
       }
@@ -4867,6 +5054,40 @@
         }
       }
     },
+    "保存的密钥无法验证车辆回复。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The saved key could not verify the vehicle's response."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保存的密钥无法验证车辆回复。"
+          }
+        }
+      }
+    },
+    "保存的蓝牙密钥记录无效；原记录未修改。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The saved Bluetooth key record is invalid. The original record is intact."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保存的蓝牙密钥记录无效；原记录未修改。"
+          }
+        }
+      }
+    },
     "保存证书": {
       "extractionState": "manual",
       "localizations": {
@@ -5031,6 +5252,57 @@
           "stringUnit": {
             "state": "translated",
             "value": "停止后即可修改声音输出。"
+          }
+        }
+      }
+    },
+    "停止扫描": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop Scanning"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "停止扫描"
+          }
+        }
+      }
+    },
+    "停止投屏后可添加或更换车辆。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop casting to add or change vehicles."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "停止投屏后可添加或更换车辆。"
+          }
+        }
+      }
+    },
+    "停止指令已发送，会话已断开。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop command sent. The session has disconnected."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "停止指令已发送，会话已断开。"
           }
         }
       }
@@ -5577,6 +5849,23 @@
         }
       }
     },
+    "删除 {1}": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete {1}"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除 {1}"
+          }
+        }
+      }
+    },
     "删除“{1}”？": {
       "extractionState": "manual",
       "localizations": {
@@ -5624,6 +5913,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "删除失败"
+          }
+        }
+      }
+    },
+    "删除本机配对记录？": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete the local pairing record?"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除本机配对记录？"
+          }
+        }
+      }
+    },
+    "删除配对记录失败（{1}）。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not delete the pairing record ({1})."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除配对记录失败（{1}）。"
           }
         }
       }
@@ -6165,6 +6488,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "取消连接"
+          }
+        }
+      }
+    },
+    "取消配对": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel Pairing"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "取消配对"
           }
         }
       }
@@ -7041,6 +7381,23 @@
         }
       }
     },
+    "启动投屏时将自动连接车辆。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The selected vehicle will connect when casting starts."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "启动投屏时将自动连接车辆。"
+          }
+        }
+      }
+    },
     "启动时使用勾选的屏幕。左滑可删除。": {
       "extractionState": "manual",
       "localizations": {
@@ -7207,6 +7564,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "回到前台等待显示"
+          }
+        }
+      }
+    },
+    "回复仪表导航状态失败。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not send the navigation status to the dashboard."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "回复仪表导航状态失败。"
           }
         }
       }
@@ -8228,6 +8602,23 @@
         }
       }
     },
+    "尚未实现广播版本 v{1} 的握手。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pairing for advertisement version {1} is unavailable."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "尚未实现广播版本 v{1} 的握手。"
+          }
+        }
+      }
+    },
     "尚未实现：{1} {2}；未占用会话": {
       "extractionState": "manual",
       "localizations": {
@@ -8275,6 +8666,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "尚未导入有效的 MFi 身份"
+          }
+        }
+      }
+    },
+    "尚未收到可连接的车辆广播，请重新扫描。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No connectable vehicle advertisement received. Scan again."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "尚未收到可连接的车辆广播，请重新扫描。"
           }
         }
       }
@@ -8481,6 +8889,23 @@
         }
       }
     },
+    "已关闭自动连接。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatic vehicle connection is off."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已关闭自动连接。"
+          }
+        }
+      }
+    },
     "已创建本机配件端点（传输类型 2），正在建立 iAP2": {
       "extractionState": "manual",
       "localizations": {
@@ -8511,6 +8936,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "已删除 Wi-Fi 预设“{1}”"
+          }
+        }
+      }
+    },
+    "已删除本机配对记录。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The local pairing record was deleted."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已删除本机配对记录。"
           }
         }
       }
@@ -8701,6 +9143,23 @@
         }
       }
     },
+    "已断开；停止指令未能发送。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disconnected before the stop command could be sent."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已断开；停止指令未能发送。"
+          }
+        }
+      }
+    },
     "已是最新发布版本": {
       "extractionState": "manual",
       "localizations": {
@@ -8752,6 +9211,23 @@
         }
       }
     },
+    "已结束车辆配对连接。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The vehicle pairing connection has ended."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已结束车辆配对连接。"
+          }
+        }
+      }
+    },
     "已解码 {1} 访问单元 {2}（{3} 字节）": {
       "extractionState": "manual",
       "localizations": {
@@ -8765,6 +9241,57 @@
           "stringUnit": {
             "state": "translated",
             "value": "已解码 {1} 访问单元 {2}（{3} 字节）"
+          }
+        }
+      }
+    },
+    "已识别，可连接（广播 v{1}）。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Identified and ready to connect (advertisement v{1})."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已识别，可连接（广播 v{1}）。"
+          }
+        }
+      }
+    },
+    "已识别，等待可连接的广播。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Identified. Waiting for a connectable advertisement."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已识别，等待可连接的广播。"
+          }
+        }
+      }
+    },
+    "已识别，等待设备广播名称。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Identified. Waiting for the vehicle name."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已识别，等待设备广播名称。"
           }
         }
       }
@@ -8955,6 +9482,23 @@
         }
       }
     },
+    "已配对车辆": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paired Vehicles"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已配对车辆"
+          }
+        }
+      }
+    },
     "希望保留金额但隐藏昵称，请备注「匿名」；不希望列入名单，请备注「不上名单」。也可以发邮件申请修改或移除。": {
       "localizations": {
         "en": {
@@ -9021,6 +9565,23 @@
         }
       }
     },
+    "建立本机配对": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start Pairing"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "建立本机配对"
+          }
+        }
+      }
+    },
     "开": {
       "extractionState": "manual",
       "localizations": {
@@ -9083,6 +9644,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "开启后，同一局域网的浏览器可以查看并触控 CarPlay。"
+          }
+        }
+      }
+    },
+    "开启导航失败：{1}": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not start navigation. {1}"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "开启导航失败：{1}"
           }
         }
       }
@@ -9302,6 +9880,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "当前设备未能打开支付宝链接。可保存收款码，再到支付宝中识别。"
+          }
+        }
+      }
+    },
+    "当前车辆会话不允许发送该命令。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This command is unavailable in the current vehicle session."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "当前车辆会话不允许发送该命令。"
           }
         }
       }
@@ -9634,6 +10229,40 @@
         }
       }
     },
+    "扫描已停止。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scanning stopped."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "扫描已停止。"
+          }
+        }
+      }
+    },
+    "扫描附近车辆": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scan for Nearby Vehicles"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "扫描附近车辆"
+          }
+        }
+      }
+    },
     "投送到 iPad": {
       "extractionState": "manual",
       "localizations": {
@@ -9664,6 +10293,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "抖音"
+          }
+        }
+      }
+    },
+    "指令服务缺少写入或通知能力。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The vehicle service does not support the required writes or notifications."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "指令服务缺少写入或通知能力。"
           }
         }
       }
@@ -10769,6 +11415,23 @@
         }
       }
     },
+    "无法开始配对：{1}": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not start pairing. {1}"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法开始配对：{1}"
+          }
+        }
+      }
+    },
     "无法生成九号 4.3 寸画面": {
       "extractionState": "manual",
       "localizations": {
@@ -11328,6 +11991,23 @@
         }
       }
     },
+    "未发现九号指令服务。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Ninebot vehicle service was not found."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未发现九号指令服务。"
+          }
+        }
+      }
+    },
     "未发送": {
       "extractionState": "manual",
       "localizations": {
@@ -11341,6 +12021,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "未发送"
+          }
+        }
+      }
+    },
+    "未命名设备": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unnamed Device"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未命名设备"
           }
         }
       }
@@ -11513,6 +12210,23 @@
         }
       }
     },
+    "未获蓝牙权限，请在系统设置允许此 App 使用蓝牙。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allow Bluetooth access for CarWithin in iOS Settings."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未获蓝牙权限，请在系统设置允许此 App 使用蓝牙。"
+          }
+        }
+      }
+    },
     "未载入": {
       "extractionState": "manual",
       "localizations": {
@@ -11560,6 +12274,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "未选择"
+          }
+        }
+      }
+    },
+    "未选车辆": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Vehicle Selected"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未选车辆"
+          }
+        }
+      }
+    },
+    "未选车辆时": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Without a Selected Vehicle"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未选车辆时"
           }
         }
       }
@@ -12379,6 +13127,23 @@
         }
       }
     },
+    "正在扫描九号车辆…": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scanning for Ninebot vehicles…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在扫描九号车辆…"
+          }
+        }
+      }
+    },
     "正在投屏 · 1024×480 · H.264": {
       "extractionState": "manual",
       "localizations": {
@@ -12498,6 +13263,23 @@
         }
       }
     },
+    "正在查找指令服务和通知通道…": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finding the vehicle service and notification channel…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在查找指令服务和通知通道…"
+          }
+        }
+      }
+    },
     "正在注册蓝牙服务 {1}（{2} 字节 UUID）": {
       "extractionState": "manual",
       "localizations": {
@@ -12511,6 +13293,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "正在注册蓝牙服务 {1}（{2} 字节 UUID）"
+          }
+        }
+      }
+    },
+    "正在用本机保存的密钥认证…": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Authenticating with the saved key…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在用本机保存的密钥认证…"
           }
         }
       }
@@ -12545,6 +13344,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "正在等待 iPhone 连接"
+          }
+        }
+      }
+    },
+    "正在等待系统蓝牙就绪。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for Bluetooth…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在等待系统蓝牙就绪。"
           }
         }
       }
@@ -12600,6 +13416,23 @@
         }
       }
     },
+    "正在读取车辆认证参数…": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reading vehicle authentication parameters…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在读取车辆认证参数…"
+          }
+        }
+      }
+    },
     "正在连接 CarLink 中继…": {
       "extractionState": "manual",
       "localizations": {
@@ -12647,6 +13480,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "正在连接 iPad…"
+          }
+        }
+      }
+    },
+    "正在连接 {1}…": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connecting to {1}…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在连接 {1}…"
           }
         }
       }
@@ -12715,6 +13565,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "正在连接极核仪表…"
+          }
+        }
+      }
+    },
+    "正在连接车辆。请在系统设置加入仪表 Wi-Fi。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connecting to the vehicle. Join the dashboard Wi-Fi in iOS Settings."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在连接车辆。请在系统设置加入仪表 Wi-Fi。"
+          }
+        }
+      }
+    },
+    "正在通知仪表停止导航…": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Asking the dashboard to stop navigation…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在通知仪表停止导航…"
           }
         }
       }
@@ -12851,6 +13735,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "此版本需要 iOS {1} 或更高版本。"
+          }
+        }
+      }
+    },
+    "此设备不支持低功耗蓝牙。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This device does not support Bluetooth Low Energy."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此设备不支持低功耗蓝牙。"
+          }
+        }
+      }
+    },
+    "此车需要重新配对。请停止投屏，再打开「车辆配对」。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This vehicle needs to be paired again. Stop casting, then open Vehicle Pairing."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此车需要重新配对。请停止投屏，再打开「车辆配对」。"
           }
         }
       }
@@ -13193,6 +14111,23 @@
         }
       }
     },
+    "添加车辆": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add a Vehicle"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加车辆"
+          }
+        }
+      }
+    },
     "添加预设后，切换网络时可直接选用。": {
       "extractionState": "manual",
       "localizations": {
@@ -13206,6 +14141,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "添加预设后，切换网络时可直接选用。"
+          }
+        }
+      }
+    },
+    "点击「建立本机配对」，然后按一下车上的 P 键确认。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap Start Pairing, then press the vehicle's P button to confirm."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "点击「建立本机配对」，然后按一下车上的 P 键确认。"
           }
         }
       }
@@ -13805,6 +14757,40 @@
         }
       }
     },
+    "等待 P 键确认超时。请重新点击「建立本机配对」，并在 60 秒内按一下车上的 P 键。配对记录已保留。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Confirmation timed out. Tap Start Pairing again and press the vehicle's P button within 60 seconds. The pairing record is retained."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "等待 P 键确认超时。请重新点击「建立本机配对」，并在 60 秒内按一下车上的 P 键。配对记录已保留。"
+          }
+        }
+      }
+    },
+    "等待上一条蓝牙连接完全断开后再恢复会话。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for the previous Bluetooth connection to close before reconnecting."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "等待上一条蓝牙连接完全断开后再恢复会话。"
+          }
+        }
+      }
+    },
     "等待九号 7 寸仪表回应…": {
       "extractionState": "manual",
       "localizations": {
@@ -13958,6 +14944,23 @@
         }
       }
     },
+    "系统找不到已保存的车辆，请重新扫描。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The saved vehicle could not be found. Scan again."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "系统找不到已保存的车辆，请重新扫描。"
+          }
+        }
+      }
+    },
     "系统状态变化": {
       "extractionState": "manual",
       "localizations": {
@@ -14039,6 +15042,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "系统画中画已开启"
+          }
+        }
+      }
+    },
+    "系统蓝牙暂不可用。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bluetooth is temporarily unavailable."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "系统蓝牙暂不可用。"
+          }
+        }
+      }
+    },
+    "系统蓝牙正在重置，等待恢复。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bluetooth is resetting. Wait for it to become available."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "系统蓝牙正在重置，等待恢复。"
           }
         }
       }
@@ -14565,6 +15602,159 @@
         }
       }
     },
+    "蓝牙写入长时间受阻，将重新建立会话。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bluetooth writes stalled. Reconnecting."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "蓝牙写入长时间受阻，将重新建立会话。"
+          }
+        }
+      }
+    },
+    "蓝牙加密失败（{1}）": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bluetooth encryption failed ({1})"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "蓝牙加密失败（{1}）"
+          }
+        }
+      }
+    },
+    "蓝牙协商的写入长度无效。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The negotiated Bluetooth write length is invalid."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "蓝牙协商的写入长度无效。"
+          }
+        }
+      }
+    },
+    "蓝牙发送通道尚未就绪。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Bluetooth write channel is not ready."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "蓝牙发送通道尚未就绪。"
+          }
+        }
+      }
+    },
+    "蓝牙发送队列拥塞。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Bluetooth write queue is full."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "蓝牙发送队列拥塞。"
+          }
+        }
+      }
+    },
+    "蓝牙已关闭，请在系统设置开启。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn on Bluetooth in iOS Settings."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "蓝牙已关闭，请在系统设置开启。"
+          }
+        }
+      }
+    },
+    "蓝牙已就绪。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bluetooth is ready."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "蓝牙已就绪。"
+          }
+        }
+      }
+    },
+    "蓝牙帧数据超过 242 字节": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bluetooth frame payload exceeds 242 bytes"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "蓝牙帧数据超过 242 字节"
+          }
+        }
+      }
+    },
+    "蓝牙帧格式或长度不正确": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid Bluetooth frame format or length"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "蓝牙帧格式或长度不正确"
+          }
+        }
+      }
+    },
     "蓝牙帧被拒绝：{1}": {
       "extractionState": "manual",
       "localizations": {
@@ -14667,6 +15857,23 @@
         }
       }
     },
+    "蓝牙服务发现或通知启用超时。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Timed out discovering the Bluetooth service or enabling notifications."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "蓝牙服务发现或通知启用超时。"
+          }
+        }
+      }
+    },
     "蓝牙服务已注册，正在广播 {1}": {
       "extractionState": "manual",
       "localizations": {
@@ -14701,6 +15908,57 @@
         }
       }
     },
+    "蓝牙消息序号已用尽，请重新连接": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bluetooth sequence numbers exhausted. Reconnect to continue."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "蓝牙消息序号已用尽，请重新连接"
+          }
+        }
+      }
+    },
+    "蓝牙消息序号过期或重复": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stale or duplicate Bluetooth message sequence number"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "蓝牙消息序号过期或重复"
+          }
+        }
+      }
+    },
+    "蓝牙消息认证失败": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bluetooth message authentication failed"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "蓝牙消息认证失败"
+          }
+        }
+      }
+    },
     "蓝牙状态：{1}": {
       "extractionState": "manual",
       "localizations": {
@@ -14731,6 +15989,74 @@
           "stringUnit": {
             "state": "translated",
             "value": "蓝牙编码失败：{1}"
+          }
+        }
+      }
+    },
+    "蓝牙认证参数必须为 16 字节": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bluetooth authentication parameter must be 16 bytes"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "蓝牙认证参数必须为 16 字节"
+          }
+        }
+      }
+    },
+    "蓝牙连接超时。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Bluetooth connection timed out."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "蓝牙连接超时。"
+          }
+        }
+      }
+    },
+    "蓝牙通知已关闭或启用失败。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bluetooth notifications were disabled or could not be enabled."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "蓝牙通知已关闭或启用失败。"
+          }
+        }
+      }
+    },
+    "蓝牙重试发送失败。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Bluetooth command could not be resent."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "蓝牙重试发送失败。"
           }
         }
       }
@@ -15125,6 +16451,40 @@
         }
       }
     },
+    "认证处理失败：{1}": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Authentication failed. {1}"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "认证处理失败：{1}"
+          }
+        }
+      }
+    },
+    "认证成功，正在等待仪表确认开启导航…": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Authenticated. Waiting for the dashboard to confirm navigation…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "认证成功，正在等待仪表确认开启导航…"
+          }
+        }
+      }
+    },
     "认证或识别完成前收到 CarPlay 可用通知": {
       "extractionState": "manual",
       "localizations": {
@@ -15138,6 +16498,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "认证或识别完成前收到 CarPlay 可用通知"
+          }
+        }
+      }
+    },
+    "认证指令发送失败：{1}": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not send the authentication command. {1}"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "认证指令发送失败：{1}"
+          }
+        }
+      }
+    },
+    "认证期间连接中断。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The connection dropped during authentication."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "认证期间连接中断。"
           }
         }
       }
@@ -15172,6 +16566,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "让 iPhone 加入 Wi-Fi"
+          }
+        }
+      }
+    },
+    "让 iPhone 加入仪表 Wi-Fi。配对并选择车辆后，CarWithin 会在启动投屏时自动开启仪表导航。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Join the dashboard Wi-Fi. Once you pair and select a vehicle, CarWithin starts dashboard navigation when you start casting."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "让 iPhone 加入仪表 Wi-Fi。配对并选择车辆后，CarWithin 会在启动投屏时自动开启仪表导航。"
           }
         }
       }
@@ -15769,6 +17180,23 @@
         }
       }
     },
+    "请扫描并选择车辆。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scan for and select your vehicle."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请扫描并选择车辆。"
+          }
+        }
+      }
+    },
     "请把 iPad 旋转到所选方向以获得全屏画面": {
       "extractionState": "manual",
       "localizations": {
@@ -16271,6 +17699,57 @@
           "stringUnit": {
             "state": "translated",
             "value": "读取本机身份"
+          }
+        }
+      }
+    },
+    "读取蓝牙通知失败。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not read a Bluetooth notification."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "读取蓝牙通知失败。"
+          }
+        }
+      }
+    },
+    "读取认证参数失败：{1}": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not read authentication parameters. {1}"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "读取认证参数失败：{1}"
+          }
+        }
+      }
+    },
+    "读取车辆认证参数超时。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Timed out reading vehicle authentication parameters."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "读取车辆认证参数超时。"
           }
         }
       }
@@ -16831,6 +18310,125 @@
         }
       }
     },
+    "车辆密钥认证超时。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vehicle key authentication timed out."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "车辆密钥认证超时。"
+          }
+        }
+      }
+    },
+    "车辆导航连接已停止。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The vehicle navigation connection has stopped."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "车辆导航连接已停止。"
+          }
+        }
+      }
+    },
+    "车辆指令服务已变化，将重新连接。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The vehicle service changed. Reconnecting."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "车辆指令服务已变化，将重新连接。"
+          }
+        }
+      }
+    },
+    "车辆未接受保存的密钥。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The vehicle rejected the saved key."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "车辆未接受保存的密钥。"
+          }
+        }
+      }
+    },
+    "车辆蓝牙连接已断开。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The vehicle Bluetooth connection has ended."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "车辆蓝牙连接已断开。"
+          }
+        }
+      }
+    },
+    "车辆返回的认证信息长度无效。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The vehicle returned an invalid authentication data length."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "车辆返回的认证信息长度无效。"
+          }
+        }
+      }
+    },
+    "车辆配对": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vehicle Pairing"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "车辆配对"
+          }
+        }
+      }
+    },
     "轻点保存，长按确认保存": {
       "localizations": {
         "en": {
@@ -17048,6 +18646,23 @@
         }
       }
     },
+    "连接中断，{1} 秒后重连（{2}/5）；不会自动重新配对。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connection lost. Reconnecting in {1} seconds (attempt {2} of 5) using the existing pairing."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "连接中断，{1} 秒后重连（{2}/5）；不会自动重新配对。"
+          }
+        }
+      }
+    },
     "连接仪表 Wi-Fi，先启动本机 CarPlay。没有画面时，再到九号出行开启投屏导航。": {
       "extractionState": "manual",
       "localizations": {
@@ -17163,6 +18778,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "连接较久时，可尝试在系统设置中关闭再打开 Wi-Fi。当前仍在继续连接。"
+          }
+        }
+      }
+    },
+    "连续收到无法验证的蓝牙数据，将重新认证。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Several Bluetooth messages could not be verified. Authenticating again."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "连续收到无法验证的蓝牙数据，将重新认证。"
+          }
+        }
+      }
+    },
+    "连续重连失败。请重新发起连接。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reconnection attempts failed. Start a new connection."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "连续重连失败。请重新发起连接。"
           }
         }
       }
@@ -17336,6 +18985,23 @@
         }
       }
     },
+    "通电后扫描并选择自己的车辆。建立本机配对时，按车上的 P 键确认。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Power on your vehicle, then scan and select it. Press the vehicle's P button when prompted to confirm pairing."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "通电后扫描并选择自己的车辆。建立本机配对时，按车上的 P 键确认。"
+          }
+        }
+      }
+    },
     "速度优先": {
       "extractionState": "manual",
       "localizations": {
@@ -17349,6 +19015,74 @@
           "stringUnit": {
             "state": "translated",
             "value": "速度优先"
+          }
+        }
+      }
+    },
+    "配对发送失败，待确认密钥仍已保存。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not send the pairing command. The pending key was retained."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "配对发送失败，待确认密钥仍已保存。"
+          }
+        }
+      }
+    },
+    "配对完成。请在「已配对车辆」中选择这台车。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pairing complete. Select this vehicle under Paired Vehicles."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "配对完成。请在「已配对车辆」中选择这台车。"
+          }
+        }
+      }
+    },
+    "配对请求已发出，请在 60 秒内按 P 键确认。收到确认后会自动继续认证。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pairing requested. Press the vehicle's P button within 60 seconds to confirm and continue authentication."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "配对请求已发出，请在 60 秒内按 P 键确认。收到确认后会自动继续认证。"
+          }
+        }
+      }
+    },
+    "配对连接已中断，已停止自动重试；待确认密钥已保留。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The pairing connection dropped. Automatic retries have stopped and the pending key was retained."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "配对连接已中断，已停止自动重试；待确认密钥已保留。"
           }
         }
       }
@@ -17450,6 +19184,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "金色支持"
+          }
+        }
+      }
+    },
+    "钥匙串无法访问（{1}）；请先解锁 iPhone。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keychain is unavailable ({1}). Unlock the iPhone and try again."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "钥匙串无法访问（{1}）；请先解锁 iPhone。"
           }
         }
       }

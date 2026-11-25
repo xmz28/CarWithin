@@ -26,7 +26,7 @@
 		<true/>
 	</dict>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>CarWithin 使用蓝牙发现并连接 CarPlay 设备；开启 BMS 读取后，连接你选择的蚂蚁 ANT BMS 并读取电池实时信息。</string>
+	<string>CarWithin 使用蓝牙连接 CarPlay 设备、配对所选九号车辆并开启仪表导航，以及读取已选 ANT BMS 的电池状态。</string>
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_airplay._tcp</string>

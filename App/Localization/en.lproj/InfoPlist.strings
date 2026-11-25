@@ -1,4 +1,4 @@
-"NSBluetoothAlwaysUsageDescription" = "CarWithin uses Bluetooth to discover and connect to CarPlay devices and, when BMS reading is enabled, read real-time battery data from the ANT BMS you select.";
+"NSBluetoothAlwaysUsageDescription" = "CarWithin uses Bluetooth for CarPlay, to pair with the Ninebot vehicle you select and start dashboard navigation, and to read real-time data from the ANT BMS you select.";
 "NSLocalNetworkUsageDescription" = "CarWithin needs access to your local network to receive CarPlay audio and video and, when you choose, send video or audio to receivers on the same network.";
 "NSLocationWhenInUseUsageDescription" = "CarWithin uses location access only to read the current Wi-Fi network name. It does not collect your location coordinates.";
 "NSMicrophoneUsageDescription" = "CarWithin uses the microphone to send Siri and call audio back to the iPhone.";

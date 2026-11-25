@@ -54,6 +54,10 @@ License. See App/KCP-LICENSE.txt, also bundled with the app.
 
 ZeehoOutput and the PXC H.264 session adapt xmz28 Ninebot Pro iOS
 Networking/TailingConnection.swift, TailingProtocol.swift and Media/H264Encoder.swift.
+
+Ninebot vehicle discovery, BLE authentication, Keychain records and navigation
+session handling are adapted from NineCast Link for iOS at c0696d3d1aad2de2d7657a238b5c7fb915f01658.
+https://github.com/Margele/NineCast-iOS
 MIT License
 
 Copyright (c) 2017 Lin Wei (skywind3000 at gmail.com)
