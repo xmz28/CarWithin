@@ -22,6 +22,7 @@ struct ReceiverConfiguration {
     /// HTTPS (WebCodecs) port; nil disables it. Defaults to the HTTP port + 1.
     var secureVideoOutputPort: UInt16?
     let deviceID: String
+    var hotspotMode = false
     /// Experimental CarLife output to a head unit; needs H.264 at or below 1920×1080.
     var carLifeEnabled = false
     /// Head unit IPv4 for CarLife discovery; nil sweeps the local network.
@@ -97,6 +98,12 @@ struct ReceiverConfiguration {
         localIPv4Addresses(interface: "en0").first
     }
 
+    static func hotspotIPv4Address() -> String? {
+        localIPv4Addresses(interface: "bridge100").first
+            ?? localIPv4Addresses(interface: "ap1").first
+            ?? localIPv4Addresses().first { $0 == "172.20.10.1" }
+    }
+
     static func localIPv4Addresses(interface: String? = nil) -> [String] {
         var first: UnsafeMutablePointer<ifaddrs>?
         guard getifaddrs(&first) == 0 else { return [] }
@@ -136,7 +143,7 @@ struct ReceiverConfiguration {
         guard inet_pton(AF_INET, address, &parsed) == 1 else {
             throw ConfigurationError(CWL("请选择有效的 IPv4 地址。"))
         }
-        if requiresLocalAddress && !Self.localIPv4Addresses().contains(address) {
+        if requiresLocalAddress && !(hotspotMode && address == "127.0.0.1") && !Self.localIPv4Addresses().contains(address) {
             throw ConfigurationError(CWL("请选择属于本机当前网络连接的 IP 地址。"))
         }
         // Fixed presets or a size that follows the head unit: even, within 320…3840 per side and

@@ -27,6 +27,7 @@ final class ReceiverViewController: UIViewController, CLLocationManagerDelegate 
     private var passwordLoadedForSSID: String?
     private let channelField = UITextField()
     private let openNetworkSwitch = UISwitch()
+    private let hotspotModeSwitch = UISwitch()
     private enum SoundOutput: Int, CaseIterable {
         // Retain the persisted values so the existing Wi-Fi preference survives this change.
         case carWithin = 0, phone = 1, browser = 2
@@ -219,6 +220,12 @@ final class ReceiverViewController: UIViewController, CLLocationManagerDelegate 
     private let browserCopyButton = UIButton(type: .system)
     private let bluetoothSetupSwitch = UISwitch()
     private var needsNetworkDetails: Bool { modeControl.selectedSegmentIndex != 0 || bluetoothSetupSwitch.isOn }
+    private var supportsHotspotMode: Bool {
+        UIDevice.current.userInterfaceIdiom == .phone && modeControl.selectedSegmentIndex == 1 && outputMode == .browser
+    }
+    private var usesHotspotMode: Bool {
+        supportsHotspotMode && videoOutputSwitch.isOn && hotspotModeSwitch.isOn
+    }
     private let startButton = UIButton(type: .system)
     private let heading = UILabel()
     private let explanation = UILabel()
@@ -410,6 +417,8 @@ final class ReceiverViewController: UIViewController, CLLocationManagerDelegate 
         ssidField.text = selectedPreset?.ssid ?? UserDefaults.standard.string(forKey: "wifiSSID")
         ssidField.addTarget(self, action: #selector(networkNameChanged), for: .editingChanged)
         ssidField.addTarget(self, action: #selector(loadWiFiPassword), for: .editingDidEnd)
+        hotspotModeSwitch.isOn = UserDefaults.standard.bool(forKey: "hotspotModeEnabled")
+        hotspotModeSwitch.addTarget(self, action: #selector(hotspotModeChanged), for: .valueChanged)
         channelField.text = String(Int(selectedPreset?.channel ?? UInt8(UserDefaults.standard.object(forKey: "wifiChannel") as? Int ?? 36)))
         openNetworkSwitch.isOn = selectedPreset?.isOpen ?? false
         channelField.keyboardType = .numberPad
@@ -1043,11 +1052,13 @@ final class ReceiverViewController: UIViewController, CLLocationManagerDelegate 
     @objc private func videoOutputToggled() {
         guard !running else { return }
         UserDefaults.standard.set(videoOutputSwitch.isOn, forKey: "videoOutputEnabled")
+        refreshNetworkSummary()
         refreshVideoOutputSummary()
         reloadVisibleSettings()
     }
     private var browserAddress: String? {
-        ReceiverConfiguration.wifiIPv4Address()
+        if usesHotspotMode { return ReceiverConfiguration.hotspotIPv4Address() }
+        return ReceiverConfiguration.wifiIPv4Address()
             ?? (UIDevice.current.userInterfaceIdiom == .phone ? nil : ReceiverConfiguration.localIPv4Addresses().first)
     }
     private func portNumber(_ text: String?) -> UInt16? {
@@ -1121,9 +1132,10 @@ final class ReceiverViewController: UIViewController, CLLocationManagerDelegate 
     }
 
     private func refreshBrowserAddressLabels() {
-        browserURLLabel.text = browserURL ?? (browserPort == nil ? CWL("HTTP 端口无效") : CWL("未连接 Wi-Fi"))
+        let unavailable = usesHotspotMode ? CWL("未检测到个人热点地址") : CWL("未连接 Wi-Fi")
+        browserURLLabel.text = browserURL ?? (browserPort == nil ? CWL("HTTP 端口无效") : unavailable)
         browserCopyButton.isEnabled = browserURL != nil
-        secureBrowserURLLabel.text = secureBrowserURL ?? (browserPortError == nil ? CWL("未连接 Wi-Fi") : CWL("请检查 HTTPS 端口"))
+        secureBrowserURLLabel.text = secureBrowserURL ?? (browserPortError == nil ? unavailable : CWL("请检查 HTTPS 端口"))
         secureBrowserCopyButton.isEnabled = secureBrowserURL != nil
     }
 
@@ -1386,7 +1398,10 @@ final class ReceiverViewController: UIViewController, CLLocationManagerDelegate 
     }
     private func refreshNetworkSummary() {
         let name = ssidField.text ?? ""
-        if needsNetworkDetails, !name.isEmpty {
+        connectionHelp.isHidden = usesHotspotMode
+        if usesHotspotMode {
+            networkSummary.text = CWL("个人热点模式（实验）")
+        } else if needsNetworkDetails, !name.isEmpty {
             networkSummary.text = CWL("CarPlay Wi-Fi 预设：{1}", [String(describing: name)])
         } else if needsNetworkDetails {
             networkSummary.text = CWL("请在设置中添加或选择 Wi-Fi 预设。")
@@ -1402,7 +1417,7 @@ final class ReceiverViewController: UIViewController, CLLocationManagerDelegate 
         refreshCurrentNetwork(requestPermission: true)
     }
     private func refreshCurrentNetwork(requestPermission: Bool) {
-        guard canDetectWiFiName, !running, !waitingForNetwork, !fetchingNetwork, needsNetworkDetails,
+        guard canDetectWiFiName, !running, !waitingForNetwork, !fetchingNetwork, needsNetworkDetails, !usesHotspotMode,
               requestPermission || (activeWiFiForm == nil && (ssidField.text ?? "").isEmpty) else { return }
         let authorization = locationManager.authorizationStatus
         if authorization == .notDetermined, requestPermission {
@@ -1454,9 +1469,10 @@ final class ReceiverViewController: UIViewController, CLLocationManagerDelegate 
         } catch { passwordStatus.text = CWL("无法删除 Wi-Fi 预设：{1}", [String(describing: error.localizedDescription)]) }
     }
     private func saveSettings(_ config: ReceiverConfiguration) -> Bool {
-        do { if needsNetworkDetails { try WiFiCredentials.save(config.password, for: config.ssid) } }
+        let saveWiFi = needsNetworkDetails && !config.hotspotMode
+        do { if saveWiFi { try WiFiCredentials.save(config.password, for: config.ssid) } }
         catch { statusLabel.text = CWL("无法安全保存 Wi-Fi 密码，请重试。"); return false }
-        if needsNetworkDetails {
+        if saveWiFi {
             passwordStatus.text = WiFiCredentials.savedMessage(for: config.ssid)
             UserDefaults.standard.set(config.ssid, forKey: "wifiSSID")
             UserDefaults.standard.set(Int(config.wifiChannel), forKey: "wifiChannel")
@@ -1544,7 +1560,8 @@ final class ReceiverViewController: UIViewController, CLLocationManagerDelegate 
         updateCheckTask?.cancel()
         view.endEditing(true)
         refreshNetworkAddresses()
-        let channel = UInt8(channelField.text ?? "") ?? 36
+        let hotspotMode = usesHotspotMode
+        let channel = hotspotMode ? 36 : (UInt8(channelField.text ?? "") ?? 36)
         guard (1...196).contains(channel) else {
             revealSettings(); statusLabel.text = CWL("兼容信道请输入 1–196，或留空使用默认值 36。"); return
         }
@@ -1569,11 +1586,12 @@ final class ReceiverViewController: UIViewController, CLLocationManagerDelegate 
             outputPort = nil
             httpsPort = nil
         }
-        guard !needsNetworkDetails || openNetworkSwitch.isOn || !(passwordField.text ?? "").isEmpty else {
+        let requiresWiFiCredentials = needsNetworkDetails && !hotspotMode
+        guard !requiresWiFiCredentials || openNetworkSwitch.isOn || !(passwordField.text ?? "").isEmpty else {
             statusLabel.text = CWL("请输入 Wi-Fi 密码；开放网络请选择“无密码”。")
             revealSettings(wifi: true); return
         }
-        let password = !needsNetworkDetails || openNetworkSwitch.isOn ? "" : (passwordField.text ?? "")
+        let password = !requiresWiFiCredentials || openNetworkSwitch.isOn ? "" : (passwordField.text ?? "")
         if modeControl.selectedSegmentIndex == 2 {
             guard let identity, let target = remoteTarget else {
                 statusLabel.text = CWL("请先选择 iPad 接收端，并确保两台设备位于同一 Wi-Fi。"); return
@@ -1598,12 +1616,12 @@ final class ReceiverViewController: UIViewController, CLLocationManagerDelegate 
             guard let identity else { return }
             guard let address = localCarPlayAddress else { waitForLocalNetwork(); return }
             var config = ReceiverConfiguration(name: nameField.text ?? "CarWithin", address: address,
-                ssid: ssidField.text ?? "", password: password, wifiChannel: channel, audioEnabled: soundOutput != .phone,
+                ssid: hotspotMode ? "" : (ssidField.text ?? ""), password: password, wifiChannel: channel, audioEnabled: soundOutput != .phone,
                 videoOutputPort: outputPort, secureVideoOutputPort: httpsPort,
-                deviceID: ReceiverConfiguration.persistentDeviceID())
+                deviceID: ReceiverConfiguration.persistentDeviceID(), hotspotMode: hotspotMode)
             if !restartingAutomatically { autoRestarts = 0; lightLevel = 0; reportedScreen = nil; primaryViewer = nil }
             configureDisplay(&config)
-            do { try config.validate() } catch {
+            do { try config.validate(requiresWiFiCredentials: requiresWiFiCredentials) } catch {
                 log(CWL("无法启动本机 CarPlay：{1}", [String(describing: error.localizedDescription)]))
                 revealSettings(); statusLabel.text = error.localizedDescription; return
             }
@@ -1631,7 +1649,7 @@ final class ReceiverViewController: UIViewController, CLLocationManagerDelegate 
             }
             prepareExternalOutput(configuration: config)
             receiver.start(configuration: config, identity: identity, preferredViewer: primaryViewer)
-            watchStartupAddress(address)
+            if !hotspotMode { watchStartupAddress(address) }
             return
         }
         guard let identity else { return }
@@ -1665,7 +1683,8 @@ final class ReceiverViewController: UIViewController, CLLocationManagerDelegate 
         receiver.start(configuration: config, identity: identity)
     }
     private var localCarPlayAddress: String? {
-        outputMode.usesInstrumentWiFi ? ReceiverConfiguration.wifiIPv4Address() : browserAddress
+        if usesHotspotMode { return "127.0.0.1" }
+        return outputMode.usesInstrumentWiFi ? ReceiverConfiguration.wifiIPv4Address() : browserAddress
     }
 
     private func refreshNetworkAddresses() {
@@ -1781,7 +1800,8 @@ final class ReceiverViewController: UIViewController, CLLocationManagerDelegate 
         let task = DispatchWorkItem { [weak self] in
             guard let self, self.startupHintGeneration == generation, self.running,
                   !self.displayedVideo, self.modeControl.selectedSegmentIndex == 1 else { return }
-            self.startupHint.text = CWL("连接较久时，可尝试在系统设置中关闭再打开 Wi-Fi。当前仍在继续连接。")
+            self.startupHint.text = self.usesHotspotMode ? CWL("正在等待本机 CarPlay 回连。")
+                : CWL("连接较久时，可尝试在系统设置中关闭再打开 Wi-Fi。当前仍在继续连接。")
             self.startupHint.isHidden = false
         }
         startupHintTask = task
@@ -1825,6 +1845,7 @@ final class ReceiverViewController: UIViewController, CLLocationManagerDelegate 
     private func setEditing(_ value: Bool) {
         [nameField, ipField, ssidField, passwordField, channelField, videoOutputPortField, secureVideoOutputPortField].forEach { $0.isEnabled = value }
         openNetworkSwitch.isEnabled = value
+        hotspotModeSwitch.isEnabled = value
         videoOutputSwitch.isEnabled = value && outputMode == .browser
         orientationControl.isEnabled = value
         resolutionControl.isEnabled = value
@@ -2189,6 +2210,7 @@ extension ReceiverViewController {
     }
     @objc private func headUnitOutputChanged() {
         saveHeadUnitOutput()
+        refreshNetworkSummary()
         refreshVideoOutputSummary()
         updateVideoAspect()
         reloadVisibleSettings()
@@ -3005,28 +3027,46 @@ extension ReceiverViewController {
     }
 
     private func browserOutputSections() -> [SettingsSection] {
-        let browser = SettingsSection(footer: videoOutputSwitch.isOn ? nil : CWL("开启后，同一局域网的浏览器可以查看并触控 CarPlay。"), [
+        var controls: [SettingsRow] = [
             .control(CWL("局域网接收页"), icon: ("globe", .systemTeal), videoOutputSwitch)
-        ])
+        ]
+        if supportsHotspotMode, videoOutputSwitch.isOn {
+            controls.append(.control(CWL("个人热点模式（实验）"), icon: ("personalhotspot", .systemBlue), hotspotModeSwitch))
+        }
+        let footer = usesHotspotMode ? CWL("在系统设置开启个人热点，让车机加入后刷新地址。")
+            : videoOutputSwitch.isOn ? nil : CWL("开启后，同一局域网的浏览器可以查看并触控 CarPlay。")
+        let browser = SettingsSection(footer: footer, controls)
         guard videoOutputSwitch.isOn else { return [browser] }
+        var httpRows: [SettingsRow] = [.field(CWL("HTTP 端口"), videoOutputPortField), browserAddressRow(secure: false)]
+        if usesHotspotMode {
+            httpRows.append(.action(CWL("刷新地址"), icon: ("arrow.clockwise", .systemBlue)) { [unowned self] in
+                self.refreshNetworkAddresses()
+                self.reloadVisibleSettings()
+            })
+        }
+        httpRows.append(.action(CWL("在本机浏览器打开")) { [unowned self] in
+            guard self.running, let url = self.localBrowserURL else {
+                self.alert(CWL("请先启动 CarPlay"), CWL("启动后就可以在本机浏览器查看画面。"))
+                return
+            }
+            UIApplication.shared.open(url)
+        })
         return [
             browser,
-            SettingsSection(CWL("HTTP · 兼容模式"), [
-                .field(CWL("HTTP 端口"), videoOutputPortField),
-                browserAddressRow(secure: false),
-                .action(CWL("在本机浏览器打开")) { [unowned self] in
-                    guard self.running, let url = self.localBrowserURL else {
-                        self.alert(CWL("请先启动 CarPlay"), CWL("启动后就可以在本机浏览器查看画面。"))
-                        return
-                    }
-                    UIApplication.shared.open(url)
-                }
-            ]),
+            SettingsSection(CWL("HTTP · 兼容模式"), httpRows),
             SettingsSection(CWL("高级"), footer: CWL("浏览器性能默认自动。低延迟频繁跳帧时会回到兼容模式。"), [
                 .control(CWL("浏览器性能"), icon: ("speedometer", .systemBlue), performanceControl),
                 .control(CWL("显示触摸点"), icon: ("hand.tap.fill", .systemOrange), showTouchesSwitch)
             ])
         ]
+    }
+
+    @objc private func hotspotModeChanged() {
+        guard !running, !waitingForNetwork else { return }
+        UserDefaults.standard.set(hotspotModeSwitch.isOn, forKey: "hotspotModeEnabled")
+        refreshNetworkSummary()
+        refreshNetworkAddresses()
+        reloadVisibleSettings()
     }
 
     @objc private func httpsModeChanged() {
@@ -3117,7 +3157,7 @@ extension ReceiverViewController {
 
     private func copySettingsAddress(_ url: String?) {
         guard let url else {
-            alert(CWL("无法复制地址"), browserPortError ?? CWL("请先连接 Wi-Fi。"))
+            alert(CWL("无法复制地址"), browserPortError ?? (usesHotspotMode ? CWL("未检测到个人热点地址") : CWL("请先连接 Wi-Fi。")))
             return
         }
         UIPasteboard.general.string = url
