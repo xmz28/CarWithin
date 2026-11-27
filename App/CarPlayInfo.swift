@@ -26,7 +26,9 @@ enum CarPlayInfo {
     }
 
     static func build(_ config: ReceiverConfiguration) -> [String: Any] {
-        let area: [String: Any] = ["widthPixels": config.width, "heightPixels": config.height, "originXPixels": 0, "originYPixels": 0]
+        let drawn = config.viewArea.rect(width: config.width, height: config.height)
+        let area: [String: Any] = ["widthPixels": drawn.width, "heightPixels": drawn.height,
+                                   "originXPixels": drawn.x, "originYPixels": drawn.y]
         var view = area; var safe = area; safe["drawUIOutsideSafeArea"] = true; view["safeArea"] = safe
         let widthPhysical = config.widthPhysicalMM
         let heightPhysical = max(1, Int((Double(widthPhysical) * Double(config.height) / Double(config.width)).rounded()))

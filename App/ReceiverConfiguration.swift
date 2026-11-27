@@ -51,6 +51,8 @@ struct ReceiverConfiguration {
     static let carLinkRelayPort: UInt16 = 24890
     /// Physical width declared to the iPhone; larger values fit more (smaller) icons per page.
     var widthPhysicalMM = CarPlayInfo.defaultWidthPhysicalMM
+    /// Where CarPlay draws inside the width×height frame; the rest stays black.
+    var viewArea = DisplayViewArea.full
     var browserPerformance: BrowserPerformance = .auto
     var showTouches = false
     /// Square PNG (≤ 192 px) for the car button on the CarPlay home screen; nil hides it.

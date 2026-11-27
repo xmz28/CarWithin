@@ -22471,6 +22471,210 @@
           }
         }
       }
+    },
+    "只让 CarPlay 画在输出画面的一部分，其余留黑。用于只显示画面一部分的仪表或自定义仪表布局。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Let CarPlay draw in part of the output frame and keep the rest black. Use this for instruments that show only part of the stream or for custom dashboard layouts."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "只让 CarPlay 画在输出画面的一部分，其余留黑。用于只显示画面一部分的仪表或自定义仪表布局。"
+          }
+        }
+      }
+    },
+    "CarPlay 显示区域": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CarPlay Area"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CarPlay 显示区域"
+          }
+        }
+      }
+    },
+    "全屏": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Full Screen"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "全屏"
+          }
+        }
+      }
+    },
+    "输出画面 {1}×{2}；CarPlay 区域 {3}×{4}，起点 ({5}, {6})。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Output frame {1}×{2}; CarPlay area {3}×{4} starting at ({5}, {6})."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "输出画面 {1}×{2}；CarPlay 区域 {3}×{4}，起点 ({5}, {6})。"
+          }
+        }
+      }
+    },
+    "边距": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Margins"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "边距"
+          }
+        }
+      }
+    },
+    "按输出画面的像素计算，每种输出分别保存，下次启动 CarPlay 时生效。区域每边至少保留 320 像素。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Margins are in output pixels, saved separately for each output, and apply the next time CarPlay starts. The area keeps at least 320 pixels on each side."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "按输出画面的像素计算，每种输出分别保存，下次启动 CarPlay 时生效。区域每边至少保留 320 像素。"
+          }
+        }
+      }
+    },
+    "左": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Left"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "左"
+          }
+        }
+      }
+    },
+    "右": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Right"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "右"
+          }
+        }
+      }
+    },
+    "上": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Top"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "上"
+          }
+        }
+      }
+    },
+    "下": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bottom"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下"
+          }
+        }
+      }
+    },
+    "恢复全屏": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset to Full Screen"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "恢复全屏"
+          }
+        }
+      }
+    },
+    "CarPlay 区域 {1}×{2}，输出画面 {3}×{4}": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CarPlay area {1}×{2}, output frame {3}×{4}"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CarPlay 区域 {1}×{2}，输出画面 {3}×{4}"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

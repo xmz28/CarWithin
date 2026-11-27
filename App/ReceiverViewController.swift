@@ -1283,6 +1283,7 @@ final class ReceiverViewController: UIViewController, CLLocationManagerDelegate 
         config.width = plan.width; config.height = plan.height
         config.maxFPS = plan.fps; config.videoCodec = plan.codec
         config.widthPhysicalMM = plan.iconWidthMM
+        config.viewArea = DisplayViewArea.load(output: outputMode.rawValue)
         config.browserPerformance = selectedPerformance
         config.showTouches = showTouchesSwitch.isOn
         if carButtonSwitch.isOn {
@@ -2716,12 +2717,14 @@ extension ReceiverViewController {
         page(CWL("画面")) { [unowned self] in
             if let profile = outputMode.motorcycleProfile {
                 return [SettingsSection(profile.title, footer: profile.instructions, [.info(CWL("仪表画面"), profile.detail)]),
+                    viewAreaSection(),
                     SettingsSection(CWL("图标"), [.control(CWL("CarPlay 图标大小"), icon: ("square.grid.2x2.fill", .systemPurple), iconSizeControl)])]
             }
             if let cfmoto = cfmotoProfile {
                 let name = outputMode == .cfmoto5 ? CWL("春风 5 寸") : CWL("春风 6.2 寸")
                 return [
                     SettingsSection(name, [.info(CWL("仪表画面"), "\(cfmoto.width)×\(cfmoto.height) · H.264 · PXC(TCP) · \(cfmoto.fps) FPS")]),
+                    viewAreaSection(),
                     SettingsSection(CWL("图标"), [.control(CWL("CarPlay 图标大小"), icon: ("square.grid.2x2.fill", .systemPurple), iconSizeControl)])
                 ]
             }
@@ -2729,6 +2732,7 @@ extension ReceiverViewController {
                 let size = profile != .zeeho62 ? "跟随仪表上报尺寸" : profile.preferredSize.description
                 return [
                     SettingsSection(headUnitOutput.selectedTitle, [.info(CWL("仪表画面"), "\(size) · H.264 · 目标 \(selectedZeehoFrameRate.rawValue) FPS")]),
+                    viewAreaSection(),
                     SettingsSection(CWL("图标"), [.control(CWL("CarPlay 图标大小"), icon: ("square.grid.2x2.fill", .systemPurple), iconSizeControl)])
                 ]
             }
@@ -2743,6 +2747,7 @@ extension ReceiverViewController {
                     SettingsSection(headUnitOutput.selectedTitle, [
                         .info(CWL("仪表画面"), format)
                     ]),
+                    viewAreaSection(),
                     SettingsSection(CWL("图标"), [.control(CWL("CarPlay 图标大小"), icon: ("square.grid.2x2.fill", .systemPurple), iconSizeControl)])
                 ]
             }
@@ -2752,6 +2757,7 @@ extension ReceiverViewController {
                         .info(CWL("仪表画面"), CWL("480×272 · JPEG · 最高 20 FPS")),
                         .info(CWL("本机 CarPlay"), "960×544 · H.264 · 30 FPS")
                     ]),
+                    viewAreaSection(),
                     SettingsSection(CWL("图标"), [.control(CWL("CarPlay 图标大小"), icon: ("square.grid.2x2.fill", .systemPurple), iconSizeControl)])
                 ]
             }
@@ -2782,11 +2788,74 @@ extension ReceiverViewController {
                 SettingsSection(footer: CWL("浏览器画面持续卡顿时，自动以更轻的画面重启 CarPlay（先降到 30 FPS，再降到 720P），每次连接最多两次。"), [
                     .control(CWL("自动重启"), icon: ("arrow.clockwise", .systemGreen), autoRestartSwitch)
                 ]),
+                viewAreaSection(),
                 SettingsSection(CWL("图标"), footer: CWL("图标越小，一页放下的越多。可以在「车机屏幕」为不同屏幕保存图标大小。"), [
                     .control(CWL("CarPlay 图标大小"), icon: ("square.grid.2x2.fill", .systemPurple), iconSizeControl)
                 ]),
                 SettingsSection(footer: editingLockedFooter, [])
             ].filter { !$0.rows.isEmpty || $0.footer != nil }
+        }
+    }
+
+    /// Row on the display page that opens the CarPlay area editor for the current output.
+    private func viewAreaSection() -> SettingsSection {
+        SettingsSection(footer: CWL("只让 CarPlay 画在输出画面的一部分，其余留黑。用于只显示画面一部分的仪表或自定义仪表布局。"), [
+            .page(CWL("CarPlay 显示区域"), icon: ("rectangle.inset.filled", .systemGreen), detail: { [unowned self] in
+                let plan = self.planDisplay(for: self.targetScreen)
+                let area = DisplayViewArea.load(output: self.outputMode.rawValue)
+                guard !area.isFull else { return CWL("全屏") }
+                let rect = area.rect(width: plan.width, height: plan.height)
+                return "\(rect.width)×\(rect.height)"
+            }) { [unowned self] in self.viewAreaPage() }
+        ])
+    }
+
+    /// Margins of the CarPlay area inside the output frame, saved per output.
+    fileprivate func viewAreaPage() -> SettingsPageController {
+        let output = outputMode.rawValue
+        let preview = ViewAreaPreview()
+        let summary = StatusLabel()
+        summary.numberOfLines = 0
+        summary.font = .preferredFont(forTextStyle: .footnote)
+        summary.textColor = .secondaryLabel
+        return page(CWL("CarPlay 显示区域")) { [unowned self] in
+            let plan = self.planDisplay(for: self.targetScreen)
+            func refresh() {
+                let rect = DisplayViewArea.load(output: output).rect(width: plan.width, height: plan.height)
+                preview.update(width: plan.width, height: plan.height, area: rect)
+                summary.text = CWL("输出画面 {1}×{2}；CarPlay 区域 {3}×{4}，起点 ({5}, {6})。", [
+                    String(plan.width), String(plan.height), String(rect.width), String(rect.height),
+                    String(rect.x), String(rect.y)])
+            }
+            refresh()
+            let current = DisplayViewArea.load(output: output)
+            func margin(_ title: String, _ side: WritableKeyPath<DisplayViewArea, Int>, limit: Int) -> SettingsRow {
+                let stepper = MarginStepper(maximum: limit)
+                stepper.value = current[keyPath: side]
+                stepper.isEnabled = !self.running
+                stepper.addAction(UIAction { _ in
+                    var area = DisplayViewArea.load(output: output)
+                    area[keyPath: side] = stepper.value
+                    area.save(output: output)
+                    refresh()
+                }, for: .valueChanged)
+                return .control(title, stepper)
+            }
+            return [
+                SettingsSection(self.headUnitOutput.selectedTitle, [.view(preview), .view(summary)]),
+                SettingsSection(CWL("边距"), footer: (self.editingLockedFooter.map { $0 + "\n" } ?? "")
+                    + CWL("按输出画面的像素计算，每种输出分别保存，下次启动 CarPlay 时生效。区域每边至少保留 320 像素。"), [
+                    margin(CWL("左"), \.left, limit: plan.width),
+                    margin(CWL("右"), \.right, limit: plan.width),
+                    margin(CWL("上"), \.top, limit: plan.height),
+                    margin(CWL("下"), \.bottom, limit: plan.height)
+                ]),
+                SettingsSection([.action(CWL("恢复全屏"), icon: ("arrow.up.left.and.arrow.down.right", .systemGray)) { [unowned self] in
+                    guard !self.running else { return }
+                    DisplayViewArea.full.save(output: output)
+                    (self.settingsNavigation?.topViewController as? SettingsPageController)?.reload()
+                }])
+            ]
         }
     }
 
