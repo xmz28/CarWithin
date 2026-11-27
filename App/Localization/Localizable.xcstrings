@@ -1,6 +1,74 @@
 {
   "sourceLanguage": "zh-Hans",
   "strings": {
+    "仪表已停止回应，4.3 寸投屏已结束。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The dashboard stopped responding. The 4.3-inch video session has ended."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "仪表已停止回应，4.3 寸投屏已结束。"
+          }
+        }
+      }
+    },
+    "仪表已回应。手机已发送画面，仪表显示状态未知。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dashboard replied. Video sent. Display unconfirmed."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "仪表已回应。手机已发送画面，仪表显示状态未知。"
+          }
+        }
+      }
+    },
+    "手机已发送 {1} 帧，丢弃 {2} 帧。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phone sent {1} frames and dropped {2}."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "手机已发送 {1} 帧，丢弃 {2} 帧。"
+          }
+        }
+      }
+    },
+    "最近一次 4.3 寸投屏记录": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last 4.3-inch projection report"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "最近一次 4.3 寸投屏记录"
+          }
+        }
+      }
+    },
     "\n下次启动：{1}×{2} · {3} FPS · {4}": {
       "extractionState": "manual",
       "localizations": {

@@ -11,6 +11,9 @@ final class NinebotOutput {
     static let sevenInchFormat = (width: 1024, height: 600, fps: 25)
     static let fourThreeFormat = (width: 480, height: 272, fps: 10)
 
+    private static let reportKey = "ninebot43LastProjectionReport"
+    static var lastProjectionReport: String? { UserDefaults.standard.string(forKey: reportKey) }
+
     enum Mode {
         case fiveInch, sevenInch, fourThreeInch
     }
@@ -80,6 +83,10 @@ final class NinebotOutput {
         private var jpegFramesSent = 0
         private var jpegFramesDropped = 0
         private var lastJPEGReport = 0.0
+        // Only a reply to a recent, successfully sent probe can enable 4.3-inch video.
+        private static let jpegReplyTimeout: TimeInterval = 4
+        private var pendingJPEGHeartbeats: [UInt32: TimeInterval] = [:]
+        private var loggedStartupRetry = false
         private var decoder: TailingH264Decoder?
         private var encoder: H264Encoder?
         private var parameters = VideoParameterSets(codec: .h264)
@@ -115,12 +122,13 @@ final class NinebotOutput {
         }
 
         func start(_ local: String, _ target: String) {
-            guard active else { return }
+            guard lock.withLock({ !cancelled && acceptingFrames }) else { return }
             do {
                 let videoPort = NinebotH264Packetizer.videoPort
                 let controlPort = NinebotH264Packetizer.controlPort
-                video = try NinebotUDPSocket(localIP: local, localPort: videoPort, remoteIP: target, remotePort: videoPort)
+                let videoSocket = try NinebotUDPSocket(localIP: local, localPort: videoPort, remoteIP: target, remotePort: videoPort)
                 control = try NinebotUDPSocket(localIP: local, localPort: controlPort, remoteIP: target, remotePort: controlPort)
+                video = videoSocket
                 report(sevenInch ? CWL("等待九号 7 寸仪表回应…") : CWL("等待九号仪表回应…"))
                 switch mode {
                 case .fourThreeInch: onLog(CWL("九号 4.3 寸：JPEG/RTP UDP 5012 · RTCP UDP 5013 · 480×272 · 最高 10 FPS"))
@@ -132,6 +140,13 @@ final class NinebotOutput {
                 timer.setEventHandler { [weak self] in self?.tick() }
                 self.timer = timer
                 timer.resume()
+            } catch let error as NinebotSocketError where usesJPEG && error.isTransient {
+                if !loggedStartupRetry {
+                    loggedStartupRetry = true
+                    onLog(error.localizedDescription)
+                }
+                report(CWL("未收到仪表回应，请检查 Wi-Fi 和仪表 IP。"))
+                queue.asyncAfter(deadline: .now() + 1) { [weak self] in self?.start(local, target) }
             } catch { fail(error) }
         }
 
@@ -216,7 +231,13 @@ final class NinebotOutput {
                     counter &+= 1
                     let heartbeat = usesJPEG ? NinebotJPEGPacketizer.heartbeat(counter: counter)
                                            : NinebotH264Packetizer.heartbeat(counter: counter)
-                    do { try control.send(heartbeat) }
+                    do {
+                        try control.send(heartbeat)
+                        if usesJPEG {
+                            pendingJPEGHeartbeats = pendingJPEGHeartbeats.filter { now - $0.value < Self.jpegReplyTimeout }
+                            pendingJPEGHeartbeats[counter] = now
+                        }
+                    }
                     catch let error as NinebotSocketError where error.isTransient {}
                 }
                 for _ in 0..<8 {
@@ -227,12 +248,36 @@ final class NinebotOutput {
                             kcp = try NinebotKCPVideo(socket: video, conversation: reply.conversation)
                             onLog(CWL("九号 7 寸已协商 KCP 会话号：{1}", [String(describing: reply.conversation)]))
                         }
-                    } else if !sevenInch, let reply = NinebotH264Packetizer.heartbeatReplyCounter(response), counter &- reply < 8 {
-                        if usesJPEG, lastReply.map({ now - $0 >= 4 }) ?? true {
-                            onLog(CWL("九号 4.3 寸收到 RTCP 回应 #{1}", [String(describing: reply)]))
+                    } else if !sevenInch, let reply = NinebotH264Packetizer.heartbeatReplyCounter(response) {
+                        guard counter &- reply < 8 else { continue }
+                        if usesJPEG {
+                            guard let sentAt = pendingJPEGHeartbeats.removeValue(forKey: reply),
+                                  sentAt > (lastReply ?? -.infinity),
+                                  now - sentAt < Self.jpegReplyTimeout else { continue }
+                            if lastReply == nil {
+                                onLog(CWL("九号 4.3 寸收到 RTCP 回应 #{1}", [String(describing: reply)]))
+                            }
+                            lastReply = sentAt
+                        } else {
+                            lastReply = now
                         }
-                        lastReply = now
                     }
+                }
+                if usesJPEG {
+                    guard let lastReply else {
+                        if now - origin >= Self.jpegReplyTimeout { report(CWL("未收到仪表回应，请检查 Wi-Fi 和仪表 IP。")) }
+                        return
+                    }
+                    guard now - lastReply < Self.jpegReplyTimeout else {
+                        let message = CWL("仪表已停止回应，4.3 寸投屏已结束。")
+                        onLog(message)
+                        report(message)
+                        close()
+                        return
+                    }
+                    try sendJPEGFrame(to: video, at: now)
+                    report(sentPicture ? CWL("仪表已回应。手机已发送画面，仪表显示状态未知。") : CWL("仪表已回应，等待发送画面…"))
+                    return
                 }
                 if let lastReply, now - lastReply < 4 {
                     if sevenInch, !acknowledgedVideo {
@@ -243,10 +288,6 @@ final class NinebotOutput {
                     }
                 } else if now - origin > 4 {
                     report(CWL("未收到仪表回应，请检查 Wi-Fi 和仪表 IP。"))
-                }
-                if usesJPEG {
-                    try sendJPEGFrame(to: video, at: now)
-                    return
                 }
                 if sevenInch {
                     guard let kcp else { return }
@@ -320,6 +361,12 @@ final class NinebotOutput {
             }
         }
 
+        private func saveJPEGReport(_ state: String) {
+            let time = DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .medium)
+            let counts = CWL("手机已发送 {1} 帧，丢弃 {2} 帧。", [String(jpegFramesSent), String(jpegFramesDropped)])
+            UserDefaults.standard.set([time, state, counts].joined(separator: "\n"), forKey: NinebotOutput.reportKey)
+        }
+
         private static var unixMilliseconds: UInt64 { UInt64(Date().timeIntervalSince1970 * 1_000) }
 
         private func encode(_ image: CVPixelBuffer, at now: Double) -> H264EncodedFrame? {
@@ -369,6 +416,7 @@ final class NinebotOutput {
         private func report(_ message: String) {
             guard active, message != status else { return }
             status = message
+            if usesJPEG { saveJPEGReport(message) }
             DispatchQueue.main.async { [weak self] in
                 guard let self, self.active else { return }
                 self.onState(message)
@@ -383,11 +431,18 @@ final class NinebotOutput {
         }
 
         func close() {
-            lock.withLock { acceptingFrames = false }
+            guard lock.withLock({
+                let wasOpen = acceptingFrames
+                acceptingFrames = false
+                return wasOpen
+            }) else { return }
             timer?.cancel()
             timer = nil
             if usesJPEG {
-                try? control?.send(jpegPacketizer.bye(timestamp: jpegTimestamp, unixMilliseconds: Self.unixMilliseconds))
+                if !status.isEmpty { saveJPEGReport(status) }
+                if let lastReply, ProcessInfo.processInfo.systemUptime - lastReply < Self.jpegReplyTimeout {
+                    try? control?.send(jpegPacketizer.bye(timestamp: jpegTimestamp, unixMilliseconds: Self.unixMilliseconds))
+                }
             } else {
                 try? control?.send(NinebotH264Packetizer.bye)
             }

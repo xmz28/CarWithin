@@ -2971,6 +2971,9 @@ extension ReceiverViewController {
                     instructions.append(.guide(CWL("端口被占用"), icon: ("exclamationmark.triangle", .systemOrange),
                         CWL("若提示 UDP 5012 被占用，先停止 CarWithin，退出九号出行投屏导航及其他投屏 App，再按上面的顺序重试。")))
                 }
+                if outputMode == .ninebot43, let report = NinebotOutput.lastProjectionReport {
+                    instructions.append(.guide(CWL("最近一次 4.3 寸投屏记录"), icon: ("doc.text", .systemGray), report))
+                }
                 return [
                     SettingsSection(headUnitOutput.selectedTitle, [
                         .field(CWL("仪表 IP 地址"), activeNinebotAddressField, placeholder: outputMode == .ninebot43 ? "192.168.169.1" : "192.168.1.1"),
