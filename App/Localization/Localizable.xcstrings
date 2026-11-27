@@ -22471,6 +22471,771 @@
           }
         }
       }
+    },
+    "投屏运行中 · 停止后可修改" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Casting Active · Stop to Edit"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "投屏运行中 · 停止后可修改"
+          }
+        }
+      }
+    },
+    "请短按一下车上的 P 键确认" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Press the vehicle’s P button to confirm"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请短按一下车上的 P 键确认"
+          }
+        }
+      }
+    },
+    "蓝牙已连接 · 等待建立配对" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connected · Ready to start pairing"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "蓝牙已连接 · 等待建立配对"
+          }
+        }
+      }
+    },
+    "正在搜索附近的九号车辆" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Searching for nearby Ninebot vehicles"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在搜索附近的九号车辆"
+          }
+        }
+      }
+    },
+    "正在与车辆建立蓝牙握手" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Establishing Bluetooth handshake"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在与车辆建立蓝牙握手"
+          }
+        }
+      }
+    },
+    "等待车机就绪（约 5–8 秒）· 先别按 P 键" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waiting for vehicle (5–8 s) · Don’t press P yet"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "等待车机就绪（约 5–8 秒）· 先别按 P 键"
+          }
+        }
+      }
+    },
+    "正在验证本机配对密钥" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verifying local pairing key"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在验证本机配对密钥"
+          }
+        }
+      }
+    },
+    "正在自动重连车辆" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reconnecting to vehicle"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在自动重连车辆"
+          }
+        }
+      }
+    },
+    "正在开启仪表导航" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Starting dashboard navigation"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在开启仪表导航"
+          }
+        }
+      }
+    },
+    "仪表导航已开启" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dashboard navigation active"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仪表导航已开启"
+          }
+        }
+      }
+    },
+    "正在停止仪表导航" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stopping dashboard navigation"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在停止仪表导航"
+          }
+        }
+      }
+    },
+    "蓝牙暂不可用" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bluetooth unavailable"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "蓝牙暂不可用"
+          }
+        }
+      }
+    },
+    "连接或认证未完成" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connection or authentication failed"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "连接或认证未完成"
+          }
+        }
+      }
+    },
+    "自动连接 · 蓝牙广播 v{1}" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto-Connect · BLE v{1}"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自动连接 · 蓝牙广播 v{1}"
+          }
+        }
+      }
+    },
+    "暂未选择自动连接车辆" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No vehicle selected for auto-connect"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暂未选择自动连接车辆"
+          }
+        }
+      }
+    },
+    "删除后需要重新扫描并按 P 键配对。" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You will need to scan and press the P button to pair again."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除后需要重新扫描并按 P 键配对。"
+          }
+        }
+      }
+    },
+    "已锁定" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Locked"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已锁定"
+          }
+        }
+      }
+    },
+    "清除残留配对密钥并重配" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear Stale Key & Re-pair"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清除残留配对密钥并重配"
+          }
+        }
+      }
+    },
+    "暂无已配对车辆" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Paired Vehicles"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暂无已配对车辆"
+          }
+        }
+      }
+    },
+    "在下方扫描并选择车辆完成首次配对" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scan below and choose your vehicle to pair"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在下方扫描并选择车辆完成首次配对"
+          }
+        }
+      }
+    },
+    "已启用自动连接 · 蓝牙广播 v{1}" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto-Connect Enabled · BLE v{1}"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已启用自动连接 · 蓝牙广播 v{1}"
+          }
+        }
+      }
+    },
+    "蓝牙广播 v{1}" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BLE v{1}"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "蓝牙广播 v{1}"
+          }
+        }
+      }
+    },
+    "启动投屏时不自动连接车辆蓝牙" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Will not connect to a vehicle when casting starts"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启动投屏时不自动连接车辆蓝牙"
+          }
+        }
+      }
+    },
+    "一键重新配对（按 P 键）" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "One-Tap Re-pair (Press P Button)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一键重新配对（按 P 键）"
+          }
+        }
+      }
+    },
+    "重新配对 {1}，无需删除重扫" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Re-pair {1} without deleting or rescanning"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重新配对 {1}，无需删除重扫"
+          }
+        }
+      }
+    },
+    "轻点切换自动连接车辆，左滑可删除记录。切回九号出行连过蓝牙导致认证失败时，可直接点「一键重新配对（按 P 键）」。" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap to switch auto-connect vehicle, or swipe left to delete. If authentication fails after using the Ninebot app, tap “One-Tap Re-pair (Press P Button)”."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "轻点切换自动连接车辆，左滑可删除记录。切回九号出行连过蓝牙导致认证失败时，可直接点「一键重新配对（按 P 键）」。"
+          }
+        }
+      }
+    },
+    "轻点选择启动投屏时自动连接的车辆，左滑可删除记录。" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap to choose a vehicle for auto-connect when casting starts, or swipe left to delete."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "轻点选择启动投屏时自动连接的车辆，左滑可删除记录。"
+          }
+        }
+      }
+    },
+    "正在搜索附近九号车辆…" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Searching for nearby Ninebot vehicles…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在搜索附近九号车辆…"
+          }
+        }
+      }
+    },
+    "暂未发现附近车辆，请确保车辆已通电并靠近车头。" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No vehicles found yet. Power on the vehicle and stay near the dashboard."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暂未发现附近车辆，请确保车辆已通电并靠近车头。"
+          }
+        }
+      }
+    },
+    "连接" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connect"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "连接"
+          }
+        }
+      }
+    },
+    "配对前请确保车辆已通电，且未在系统蓝牙或「九号出行」中保持连接。" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Make sure the vehicle is powered on and disconnected from system Bluetooth and the Ninebot app."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配对前请确保车辆已通电，且未在系统蓝牙或「九号出行」中保持连接。"
+          }
+        }
+      }
+    },
+    "1. 扫描并连接车辆" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1. Scan & Connect"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1. 扫描并连接车辆"
+          }
+        }
+      }
+    },
+    "给车辆通电并靠近车头，点击「扫描附近车辆」后点选自己的车辆。" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Power on your vehicle, stay close to the dashboard, tap “Scan Nearby Vehicles”, and select it."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "给车辆通电并靠近车头，点击「扫描附近车辆」后点选自己的车辆。"
+          }
+        }
+      }
+    },
+    "2. 等待就绪再按 P 键" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2. Wait Before Pressing P"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2. 等待就绪再按 P 键"
+          }
+        }
+      }
+    },
+    "发起配对后请等待约 5–8 秒，待提示「车机已就绪」并震动后再短按车上的 P 键。" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wait about 5–8 seconds after starting pairing until prompted and haptic feedback triggers, then press the vehicle’s P button."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "发起配对后请等待约 5–8 秒，待提示「车机已就绪」并震动后再短按车上的 P 键。"
+          }
+        }
+      }
+    },
+    "3. 选中自动连接" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3. Select for Auto-Connect"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3. 选中自动连接"
+          }
+        }
+      }
+    },
+    "配对完成后在「已配对车辆」勾选车辆，启动投屏时会自动开启仪表导航。" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select your vehicle under Paired Vehicles to automatically start dashboard navigation when casting."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配对完成后在「已配对车辆」勾选车辆，启动投屏时会自动开启仪表导航。"
+          }
+        }
+      }
+    },
+    "配对步骤" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pairing Steps"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配对步骤"
+          }
+        }
+      }
+    },
+    "暂无九号蓝牙日志。" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Ninebot Bluetooth logs yet."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暂无九号蓝牙日志。"
+          }
+        }
+      }
+    },
+    "九号蓝牙诊断日志" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ninebot Bluetooth Diagnostics Log"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "九号蓝牙诊断日志"
+          }
+        }
+      }
+    },
+    "最近 80 条，不含蓝牙配对密钥或敏感载荷。同时也会写入「诊断与实验 › 日志」。" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last 80 entries, excluding pairing keys and sensitive payloads. Also recorded in Diagnostics & Labs › Logs."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最近 80 条，不含蓝牙配对密钥或敏感载荷。同时也会写入「诊断与实验 › 日志」。"
+          }
+        }
+      }
+    },
+    "已复制蓝牙日志" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bluetooth Logs Copied"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已复制蓝牙日志"
+          }
+        }
+      }
+    },
+    "复制蓝牙日志" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy Bluetooth Logs"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "复制蓝牙日志"
+          }
+        }
+      }
+    },
+    "清空蓝牙日志" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear Bluetooth Logs"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清空蓝牙日志"
+          }
+        }
+      }
+    },
+    "九号蓝牙日志" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ninebot Bluetooth Logs"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "九号蓝牙日志"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

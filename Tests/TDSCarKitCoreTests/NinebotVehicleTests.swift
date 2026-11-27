@@ -73,9 +73,15 @@ final class NinebotVehicleTests: XCTestCase {
 
     func testOnlyTheEmptyDashboardStartReplyCountsAsAcknowledgement() {
         let ack = VehicleBLEFrame(src: 0x23, dst: 0x3e, command: 0x71, index: 0, payload: Data())
+        let ackZero = VehicleBLEFrame(src: 0x23, dst: 0x3e, command: 0x71, index: 0, payload: Data([0]))
+        let ackOne = VehicleBLEFrame(src: 0x23, dst: 0x3e, command: 0x71, index: 0, payload: Data([1]))
+        let ackOther = VehicleBLEFrame(src: 0x23, dst: 0x3e, command: 0x71, index: 0, payload: Data([2]))
         let inquiry = VehicleBLEFrame(src: 0x23, dst: 0x3e, command: 0x71, index: 0x30, payload: Data())
         let exit = VehicleBLEFrame(src: 0x23, dst: 0x3e, command: 0x71, index: 0xff, payload: Data([0]))
         XCTAssertTrue(VehicleNavigationPolicy.isNavigationStartAcknowledgement(ack))
+        XCTAssertTrue(VehicleNavigationPolicy.isNavigationStartAcknowledgement(ackZero))
+        XCTAssertTrue(VehicleNavigationPolicy.isNavigationStartAcknowledgement(ackOne))
+        XCTAssertFalse(VehicleNavigationPolicy.isNavigationStartAcknowledgement(ackOther))
         XCTAssertFalse(VehicleNavigationPolicy.isNavigationStartAcknowledgement(inquiry))
         XCTAssertFalse(VehicleNavigationPolicy.isNavigationStartAcknowledgement(exit))
     }

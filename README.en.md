@@ -105,11 +105,7 @@ One instrument was tested successfully, including screen lock. Other models and 
 
 Connect the iPhone to the dashboard Wi-Fi, select the matching preset, then choose `极核 AE2 Pro 5 寸` under Current output. Start projection on the dashboard and start CarPlay in the app. The default dashboard address is `192.168.0.1`, configurable in Output settings. Video uses H.264 at the size reported by the dashboard, up to 25 fps. Projection was confirmed on one AE2 Pro.
 
-### Additional dashboard support
-
-- **Ninebot 7-inch:** Connect to the dashboard Wi-Fi, select this output, start CarPlay, then enable navigation casting in Ninebot app and keep it running in the background. Display was confirmed on one dashboard.
-- **Ninebot 4.3-inch:** Uses the N1 90 protocol, with default address `192.168.169.1`. Follow the same startup order. Physical dashboard testing is pending.
-- **AirPlay (experimental):** Startup and reconnection may fail, and the receiver may retain the last picture after stopping.
+AirPlay is experimental. Startup and reconnection may fail, and the receiver may retain the last picture after stopping.
 
 ### ZEEHO SE+ 5/5.5-inch display
 
@@ -117,13 +113,18 @@ Choose the separate SE+ output. The 5/5.5-inch label names the intended profile 
 
 SE+ offers a 1600×770 wide canvas or 800×480 compatibility canvas, plus 25/30/60 FPS targets. Start with 30 FPS and default compatibility transcoding. H.264 passthrough is opt-in and still needs instrument testing, as do sustained 60 FPS and lock-screen stability. Sent FPS is not panel refresh. The sound page provides the system audio route picker. See [implementation and validation scope](docs/zeeho-seplus-experimental.md).
 
-### Ninebot 5-inch display
+### Ninebot 4.3-, 5-, and 7-inch displays
 
-Connect the iPhone to the instrument Wi-Fi, select its saved Wi-Fi preset, and choose Ninebot 5-inch under Current output. Start CarPlay. If the dashboard has no picture, keep CarWithin running, enable projection navigation in the Ninebot app, then close the Ninebot app from the app switcher after the dashboard shows a picture and return to CarWithin. The default instrument IP is `192.168.1.1`, configurable under Output settings. Audio plays through the iPhone or Bluetooth; control CarPlay on the phone.
+These steps apply to source builds that include the Vehicle pairing menu.
 
-One instrument was tested with repeated backgrounding and screen locks. Perceived latency was approximately 500–600 ms. Other instrument versions need testing.
+1. Power on the vehicle and select the matching display size under **Settings → Current output**. Open **Vehicle pairing**, scan, and select your vehicle.
+2. Start local pairing and press the vehicle's P button to confirm. Once paired, select the vehicle in the paired list for automatic connection.
+3. Join the instrument Wi-Fi on the iPhone and select its saved preset. Starting CarPlay connects to the selected vehicle over BLE and opens instrument navigation. If the instrument Wi-Fi only becomes visible after navigation starts, disconnect the iPhone from any other Wi-Fi network, start CarPlay, then join the instrument Wi-Fi in iOS settings.
+4. When you stop casting, CarWithin requests that navigation stop if the BLE link is available, then disconnects. If the instrument exits navigation on its own, CarWithin respects that exit for the current cast. Choose the no-automatic-connection option to disable automatic vehicle connection.
 
-**Startup order: start local CarPlay in CarWithin first, then enable navigation casting in the Ninebot app.** Starting Ninebot casting first can occupy the local casting port. If you see `bind …:5012 failed: Address already in use (errno 48)`, stop CarWithin, exit navigation casting in the Ninebot app and other casting apps, then retry in that order. This error means a local port is occupied; if Wi-Fi also disconnects, include the startup log so it can be investigated separately. Whether the Ninebot app must remain running for a 5-inch dashboard varies by model. For 7-inch and 4.3-inch dashboards, keep it in the background as described in their sections.
+The default instrument IP is `192.168.1.1` for the 5- and 7-inch modes and `192.168.169.1` for the 4.3-inch mode. Change it under Output settings. If UDP port 5012 is busy, end casting in other apps and retry. Audio plays through the iPhone or Bluetooth. Control CarPlay on the phone.
+
+Previous testing confirmed a picture on one 5-inch and one 7-inch instrument. The 5-inch display continued to update after backgrounding and locking the iPhone, with a perceived latency of approximately 500–600 ms. The 4.3-inch N1 90 output is experimental. The new vehicle pairing and automatic navigation flow still needs hardware validation on all three display sizes.
 
 ### Tailing 4.3-inch display
 

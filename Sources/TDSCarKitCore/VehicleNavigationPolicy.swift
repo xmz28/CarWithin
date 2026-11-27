@@ -22,7 +22,7 @@ enum VehicleNavigationPolicy {
     }
 
     static func isNavigationStartAcknowledgement(_ frame: VehicleBLEFrame) -> Bool {
-        frame.src == 0x23 && frame.dst == 0x3e && frame.command == 0x71
-            && frame.index == 0 && frame.payload.isEmpty
+        frame.src == 0x23 && frame.dst == 0x3e && frame.command == 0x71 && frame.index == 0
+            && (frame.payload.isEmpty || frame.payload == Data([0]) || frame.payload == Data([1]))
     }
 }
