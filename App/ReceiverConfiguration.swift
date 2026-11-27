@@ -46,6 +46,8 @@ struct ReceiverConfiguration {
     var ninebotAddress: String?
     var ninebotMode: NinebotOutput.Mode = .fiveInch
     var tailingAddress: String?
+    var zxmotoAddress: String?
+    var zxmotoPort: UInt16 = 11111
     var tailingPhoneInfo: TailingPhoneInfo?
     var carLinkRelayAddress: String?
     static let carLinkRelayPort: UInt16 = 24890
@@ -204,6 +206,16 @@ struct ReceiverConfiguration {
                   !tailingAddress.hasPrefix("127."), !tailingAddress.hasPrefix("0."),
                   UInt32(bigEndian: target.s_addr) < 0xe0000000 else {
                 throw ConfigurationError(CWL("请输入有效的台铃仪表 IPv4 地址，与本机 IP 不同。"))
+            }
+        }
+        if let zxmotoAddress, !zxmotoAddress.isEmpty {
+            var target = in_addr()
+            guard inet_pton(AF_INET, zxmotoAddress, &target) == 1, zxmotoAddress != address,
+                  !zxmotoAddress.hasPrefix("127."), !zxmotoAddress.hasPrefix("0."),
+                  !zxmotoAddress.hasPrefix("169.254."), UInt32(bigEndian: target.s_addr) < 0xe0000000,
+                  !zxmotoAddress.hasSuffix(".0"), !zxmotoAddress.hasSuffix(".255"),
+                  zxmotoPort > 0 else {
+                throw ConfigurationError(CWL("请输入 ZxMoto 仪表真实的 IPv4 地址和端口。"))
             }
         }
         if let carLinkRelayAddress {
