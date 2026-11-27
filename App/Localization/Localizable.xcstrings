@@ -2376,6 +2376,57 @@
         }
       }
     },
+    "个人热点模式（实验）": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Personal Hotspot mode (experimental)"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "个人热点模式（实验）"
+          }
+        }
+      }
+    },
+    "刷新地址": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Refresh address"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "刷新地址"
+          }
+        }
+      }
+    },
+    "在系统设置开启个人热点，让车机加入后刷新地址。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn on Personal Hotspot in Settings, connect the head unit, and refresh the address."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在系统设置开启个人热点，让车机加入后刷新地址。"
+          }
+        }
+      }
+    },
     "Wi-Fi 与网络": {
       "extractionState": "manual",
       "localizations": {
@@ -11391,6 +11442,57 @@
           "stringUnit": {
             "state": "translated",
             "value": "未收到 CarPlay 控制连接，请检查 Wi-Fi 名称和密码后重试。兼容信道通常可保持默认值。"
+          }
+        }
+      }
+    },
+    "未收到本机 CarPlay 回连。请关闭个人热点模式，改用 Wi-Fi 重试。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The local CarPlay connection timed out. Turn off Personal Hotspot mode and retry over Wi-Fi."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未收到本机 CarPlay 回连。请关闭个人热点模式，改用 Wi-Fi 重试。"
+          }
+        }
+      }
+    },
+    "未检测到个人热点地址": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Personal Hotspot address detected"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未检测到个人热点地址"
+          }
+        }
+      }
+    },
+    "正在等待本机 CarPlay 回连。": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for the local CarPlay connection."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在等待本机 CarPlay 回连。"
           }
         }
       }

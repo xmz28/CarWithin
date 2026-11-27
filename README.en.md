@@ -27,11 +27,13 @@ The maintainer checked existing functionality for regressions. The new ZEEHO, CF
 ## Quick start
 
 1. **Use CarPlay on the iPhone.** Open CarWithin, save your Wi-Fi details in the app if prompted, and start CarPlay. Once the display appears, you can use touch controls or switch to fullscreen.
-2. **Use another device as the display.** Under Settings → Current output, choose Browser. Open Output settings and enable the local receiver page. Connect the iPhone and receiver to the same Wi-Fi. The network can be offline or provided by another device's hotspot. The iPhone running CarWithin must itself join Wi-Fi. Start CarPlay and open the HTTP address displayed by the app in the receiving browser.
+2. **Use another device as the display.** Under Settings → Current output, choose Browser. Open Output settings and enable the local receiver page. In the standard mode, connect the iPhone and receiver to the same Wi-Fi. The network can be offline or provided by another device's hotspot. Start CarPlay and open the HTTP address displayed by the app in the receiving browser.
 3. **Use Safari on the same iPhone.** After starting CarPlay, use the option to open the receiver in the local browser under the app's output settings. If the page prompts you to start playback, tap it.
 4. **Stop sharing when finished.** Stop CarPlay from the iPhone. The browser receiver has no sign-in. A device that can reach its address can view and control the CarPlay session, so use a trusted network.
 
 ## Browser playback and audio
+
+To connect the head unit to the same iPhone that runs CarWithin, enable Personal Hotspot mode (experimental) in Output settings. Turn on Personal Hotspot in iPhone Settings, connect the head unit, then return to CarWithin and start local CarPlay. Open the displayed HTTP address in the head unit's browser. Use Refresh address if needed. This option is off by default and requires a valid MFi identity. If startup times out, turn off the experimental option and retry with the standard Wi-Fi setup.
 
 | Mode | When to use it | Default port |
 | --- | --- | --- |

@@ -47,7 +47,9 @@ final class SameDeviceProbe {
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 45) { [weak self] in
                 guard let self, self.active, self.generation == run, self.expectsLocalControl, !self.controlConnected else { return }
-                self.finish(CWL("未收到 CarPlay 控制连接，请检查 Wi-Fi 名称和密码后重试。兼容信道通常可保持默认值。"))
+                self.finish(configuration.hotspotMode
+                    ? CWL("未收到本机 CarPlay 回连。请关闭个人热点模式，改用 Wi-Fi 重试。")
+                    : CWL("未收到 CarPlay 控制连接，请检查 Wi-Fi 名称和密码后重试。兼容信道通常可保持默认值。"))
             }
         } catch { finish(CWL("本机传输失败：{1}", [String(describing: error.localizedDescription)])) }
     }
@@ -62,7 +64,8 @@ final class SameDeviceProbe {
         stage(CWL("CarPlay 控制连接已建立，正在协商会话"))
     }
     private func requestSession(_ configuration: ReceiverConfiguration) throws {
-        let wifi = try AccessoryMessages.WiFi(ssid: configuration.ssid, password: configuration.password, channel: configuration.wifiChannel)
+        let wifi: AccessoryMessages.WiFi? = configuration.hotspotMode ? nil
+            : try AccessoryMessages.WiFi(ssid: configuration.ssid, password: configuration.password, channel: configuration.wifiChannel)
         try send(AccessoryMessages.startSession(address: configuration.address, port: configuration.port,
             deviceID: configuration.deviceID, wifi: wifi))
     }
