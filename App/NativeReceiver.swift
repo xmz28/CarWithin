@@ -69,6 +69,8 @@ final class NativeReceiver {
     var onCfmotoState: ((String) -> Void)?
     private let tailing = TailingOutput()
     var onTailingState: ((String) -> Void)?
+    private let zxmoto = ZxMotoOutput()
+    var onZxMotoState: ((String) -> Void)?
     private lazy var carLink = CarLinkRelay(queue: queue)
     var onCarLifeState: ((String) -> Void)?
     var onCarLinkState: ((String) -> Void)?
@@ -195,6 +197,14 @@ final class NativeReceiver {
                     model: "iPhone", systemVersion: ProcessInfo.processInfo.operatingSystemVersionString,
                     width: configuration.width, height: configuration.height, rotation: 1)
                 self.tailing.start(localAddress: configuration.address, targetAddress: target, phone: phone)
+            }
+            if let target = configuration.zxmotoAddress, !target.isEmpty {
+                self.zxmoto.start(localAddress: configuration.address, targetAddress: target,
+                    port: configuration.zxmotoPort, sourceWidth: configuration.width,
+                    sourceHeight: configuration.height,
+                    onState: { [weak self] in self?.onZxMotoState?($0) },
+                    onLog: { [weak self] in self?.log($0) },
+                    requestKeyframe: { [weak self] in self?.requestKeyFrame(reason: CWL("ZxMoto 解码恢复")) })
             }
             if configuration.carLifeEnabled {
                 self.carLife.onLog = { [weak self] in self?.log($0) }
@@ -406,6 +416,7 @@ final class NativeReceiver {
         cfmoto5.stop()
         cfmoto62.stop()
         tailing.stop()
+        zxmoto.stop()
         carLink.stop()
         #if DEBUG
         diagnosticStarted = ProcessInfo.processInfo.systemUptime
@@ -513,6 +524,7 @@ final class NativeReceiver {
                         output.append(data, codec: codec, keyframe: keyframe)
                     }
                     if configuration.tailingAddress != nil { self.tailing.append(data, codec: codec) }
+                    if configuration.zxmotoAddress != nil { self.zxmoto.append(data, codec: codec, keyframe: keyframe) }
                     if configuration.carLifeEnabled { self.carLife.append(data, codec: codec) }
                     if configuration.carLinkRelayAddress != nil { self.carLink.append(data, codec: codec) }
                     guard self.localVideoEnabled else { return }

@@ -248,6 +248,10 @@ final class ReceiverViewController: UIViewController, CLLocationManagerDelegate 
     private func updateTailingStatus(_ message: String) {
         tailingStatus.text = message; tailingCardStatus.text = message
     }
+    private let zxmotoAddressField = UITextField()
+    private let zxmotoPortField = UITextField()
+    private let zxmotoStatus = StatusLabel()
+    private func updateZxMotoStatus(_ message: String) { zxmotoStatus.text = message }
     private let carLifeCard = UIStackView()
     private let airPlayCard = UIStackView()
     private let carLifeCardStatus = UILabel()
@@ -277,10 +281,18 @@ final class ReceiverViewController: UIViewController, CLLocationManagerDelegate 
     private let headUnitOutput = ChoiceMenu(items: HeadUnitOutput.menuOrder.map(\.title))
     private enum HeadUnitOutput: Int {
         // Persisted in headUnitOutputV2. Append new modes after existing values.
-        case browser, carLife, airPlay, tailing, ninebot, zeeho, ninebotSeven, ninebot43, zeehoSEPlus, zeehoAE2, cfmoto5, cfmoto62, cfmoto700MT, cfmoto800MT, cfmoto675SRR, benelliTRK, vogeDS800X, zontes368E, zontes368G, zontes703RR, qjSRT550, kove625X, moriniXCape1200, kove450Rally, kove800X, shouqu, zeehoAE4i, koveInstrument
+        case browser, carLife, airPlay, tailing, ninebot, zeeho, ninebotSeven, ninebot43, zeehoSEPlus, zeehoAE2, cfmoto5, cfmoto62, cfmoto700MT, cfmoto800MT, cfmoto675SRR, benelliTRK, vogeDS800X, zontes368E, zontes368G, zontes703RR, qjSRT550, kove625X, moriniXCape1200, kove450Rally, kove800X, shouqu, zeehoAE4i, koveInstrument, zxmoto25, zxmoto26
         // Display order is independent of the persisted raw values above.
-        static let menuOrder: [Self] = [.browser, .carLife, .airPlay, .ninebot43, .ninebot, .ninebotSeven, .tailing, .zeeho, .zeehoSEPlus, .zeehoAE2, .zeehoAE4i, .cfmoto5, .cfmoto62, .cfmoto700MT, .cfmoto800MT, .cfmoto675SRR, .shouqu, .benelliTRK, .vogeDS800X, .zontes368E, .zontes368G, .zontes703RR, .qjSRT550, .kove625X, .koveInstrument, .moriniXCape1200, .kove450Rally, .kove800X]
+        static let menuOrder: [Self] = [.browser, .carLife, .airPlay, .ninebot43, .ninebot, .ninebotSeven, .tailing, .zeeho, .zeehoSEPlus, .zeehoAE2, .zeehoAE4i, .cfmoto5, .cfmoto62, .cfmoto700MT, .cfmoto800MT, .cfmoto675SRR, .shouqu, .benelliTRK, .vogeDS800X, .zontes368E, .zontes368G, .zontes703RR, .qjSRT550, .kove625X, .koveInstrument, .moriniXCape1200, .kove450Rally, .kove800X, .zxmoto25, .zxmoto26]
         var menuIndex: Int { Self.menuOrder.firstIndex(of: self)! }
+        var isZXMoto: Bool { self == .zxmoto25 || self == .zxmoto26 }
+        var zxmotoPresetAddress: String? {
+            switch self {
+            case .zxmoto25: return "192.168.13.1"
+            case .zxmoto26: return "192.168.21.1"
+            default: return nil
+            }
+        }
         var title: String {
             switch self {
             case .browser: return CWL("浏览器")
@@ -290,6 +302,8 @@ final class ReceiverViewController: UIViewController, CLLocationManagerDelegate 
             case .ninebot: return CWL("九号 5 寸")
             case .ninebotSeven: return CWL("九号 7 寸")
             case .tailing: return CWL("台铃 4.3 寸")
+            case .zxmoto25: return "张雪 500RR（25）"
+            case .zxmoto26: return "张雪 500RR（26）"
             case .zeehoAE4i: return CWL("极核 AE4i Pro+ 6.2 寸")
             case .zeeho: return CWL("极核 6.2 寸")
             case .zeehoSEPlus: return CWL("极核 SE+ 5/5.5 寸")
@@ -337,7 +351,7 @@ final class ReceiverViewController: UIViewController, CLLocationManagerDelegate 
             }
         }
         var cfmoto: Bool { self == .cfmoto5 || self == .cfmoto62 }
-        var usesInstrumentWiFi: Bool { motorcycleProfile != nil || cfmoto || self == .tailing || zeehoProfile != nil || ninebotMode != nil }
+        var usesInstrumentWiFi: Bool { motorcycleProfile != nil || cfmoto || self == .tailing || isZXMoto || zeehoProfile != nil || ninebotMode != nil }
     }
     private var airPlayStreamID: UUID?
     private var airPlayStreamURL: URL?
@@ -789,6 +803,10 @@ final class ReceiverViewController: UIViewController, CLLocationManagerDelegate 
             guard let self, self.running, self.outputMode == .tailing else { return }
             self.updateTailingStatus(message)
         }
+        receiver.onZxMotoState = { [weak self] message in
+            guard let self, self.running, self.outputMode.isZXMoto else { return }
+            self.updateZxMotoStatus(message)
+        }
         receiver.onCarLifeState = { [weak self] message in
             guard let self, self.running, self.outputMode == .carLife else { return }
             self.updateCarLifeStatus(message)
@@ -965,6 +983,10 @@ final class ReceiverViewController: UIViewController, CLLocationManagerDelegate 
     /// Size, frame rate and codec for the next session from the settings, the known head-unit
     /// screen and any lighter level chosen by CWL("自动重启").
     private func planDisplay(for screen: CarScreen?) -> DisplayPlan {
+        if outputMode.isZXMoto {
+            let icon = ReceiverConfiguration.iconSizes[max(0, iconSizeControl.selectedSegmentIndex)].widthMM
+            return DisplayPlan(width: 800, height: 400, fps: 30, codec: .h264, iconWidthMM: icon)
+        }
         if let profile = outputMode.motorcycleProfile {
             let icon = ReceiverConfiguration.iconSizes[max(0, iconSizeControl.selectedSegmentIndex)].widthMM
             return DisplayPlan(width: profile.width, height: profile.height, fps: 30, codec: .h264, iconWidthMM: icon)
@@ -1338,6 +1360,11 @@ final class ReceiverViewController: UIViewController, CLLocationManagerDelegate 
         if outputMode == .tailing {
             config.tailingAddress = (tailingAddressField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
 
+        }
+        if outputMode.isZXMoto {
+            let address = (zxmotoAddressField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+            config.zxmotoAddress = address.isEmpty ? outputMode.zxmotoPresetAddress : address
+            config.zxmotoPort = UInt16(zxmotoPortField.text ?? "") ?? 11111
         }
         config.carLifeEnabled = outputMode == .carLife
         let carLifeAddress = (carLifeAddressField.text ?? "").trimmingCharacters(in: .whitespaces)
@@ -2027,6 +2054,8 @@ final class ReceiverViewController: UIViewController, CLLocationManagerDelegate 
         ninebotAddressField.isEnabled = value
         ninebot43AddressField.isEnabled = value
         tailingAddressField.isEnabled = value
+        zxmotoAddressField.isEnabled = value
+        zxmotoPortField.isEnabled = value
         carLifeAddressField.isEnabled = value
     }
     @objc private func willResignActive() {
@@ -2227,7 +2256,8 @@ extension ReceiverViewController {
             (CWL("贝纳利"), [.benelliTRK]), (CWL("无极"), [.vogeDS800X]),
             (CWL("升仕"), [.zontes368E, .zontes368G, .zontes703RR]),
             (CWL("钱江"), [.qjSRT550]), (CWL("凯越"), [.kove625X, .koveInstrument, .kove450Rally, .kove800X]),
-            (CWL("摩托莫里尼"), [.moriniXCape1200])
+            (CWL("摩托莫里尼"), [.moriniXCape1200]),
+            (CWL("张雪"), [.zxmoto25, .zxmoto26])
         ]
         headUnitOutput.groups = brands.map { ChoiceMenu.Group(title: $0.0, indices: $0.1.map(\.menuIndex)) }
 
@@ -2332,6 +2362,18 @@ extension ReceiverViewController {
         tailingAddressField.text = defaults.string(forKey: "tailingAddress") ?? "192.168.1.1"
         tailingAddressField.keyboardType = .decimalPad
         tailingAddressField.addTarget(self, action: #selector(saveHeadUnitOutput), for: .editingDidEnd)
+        let savedZXMotoAddress = defaults.string(forKey: "zxmotoAddress") ?? ""
+        if savedZXMotoAddress.isEmpty || savedZXMotoAddress == "192.168.43.1" {
+            zxmotoAddressField.text = outputMode.zxmotoPresetAddress ?? "192.168.13.1"
+        } else {
+            zxmotoAddressField.text = savedZXMotoAddress
+        }
+        zxmotoAddressField.keyboardType = .decimalPad
+        zxmotoAddressField.addTarget(self, action: #selector(saveHeadUnitOutput), for: .editingDidEnd)
+        zxmotoPortField.text = defaults.string(forKey: "zxmotoPort") ?? "11111"
+        zxmotoPortField.keyboardType = .numberPad
+        zxmotoPortField.addTarget(self, action: #selector(saveHeadUnitOutput), for: .editingDidEnd)
+        updateZxMotoStatus(CWL("等待启动 CarPlay。"))
         carLifeAddressField.text = defaults.string(forKey: "carLifeAddress")
         carLifeAddressField.keyboardType = .decimalPad
         carLifeAddressField.addTarget(self, action: #selector(saveHeadUnitOutput), for: .editingDidEnd)
@@ -2355,7 +2397,7 @@ extension ReceiverViewController {
         }
         nameField.addTarget(self, action: #selector(receiverNameChanged), for: .editingDidEnd)
         channelField.keyboardType = .numberPad
-        [nameField, ipField, ssidField, passwordField, channelField, carLifeAddressField, tailingAddressField, ninebotAddressField, ninebot43AddressField, zeehoAddressField, zeehoSEPlusAddressField, cfmotoAddressField, motorcycleAddressField, eryaVideoPortField, eryaControlPortField, videoOutputPortField, secureVideoOutputPortField, httpsDomainField, httpsTokenField].forEach {
+        [nameField, ipField, ssidField, passwordField, channelField, carLifeAddressField, tailingAddressField, zxmotoAddressField, zxmotoPortField, ninebotAddressField, ninebot43AddressField, zeehoAddressField, zeehoSEPlusAddressField, cfmotoAddressField, motorcycleAddressField, eryaVideoPortField, eryaControlPortField, videoOutputPortField, secureVideoOutputPortField, httpsDomainField, httpsTokenField].forEach {
             $0.returnKeyType = .done
             $0.addTarget($0, action: #selector(UIResponder.resignFirstResponder), for: .editingDidEndOnExit)
             if $0.inputAccessoryView == nil {
@@ -2379,6 +2421,8 @@ extension ReceiverViewController {
         UserDefaults.standard.set(ninebotAddressField.text ?? "", forKey: "ninebotAddress")
         UserDefaults.standard.set(ninebot43AddressField.text ?? "", forKey: "ninebot43Address")
         UserDefaults.standard.set(tailingAddressField.text ?? "", forKey: "tailingAddress")
+        UserDefaults.standard.set(zxmotoAddressField.text ?? "", forKey: "zxmotoAddress")
+        UserDefaults.standard.set(zxmotoPortField.text ?? "", forKey: "zxmotoPort")
         refreshVideoOutputSummary()
     }
     @objc private func zeehoFrameRateChanged() {
@@ -2457,6 +2501,10 @@ extension ReceiverViewController {
         saveMotorcycleAddress()
         motorcycleScanGeneration += 1; motorcycleScanner?.stop(); motorcycleScanner = nil
         loadMotorcycleAddress()
+        if let preset = outputMode.zxmotoPresetAddress {
+            zxmotoAddressField.text = preset
+            updateZxMotoStatus(CWL("已选择 {1}", [outputMode.title]))
+        }
         saveHeadUnitOutput()
         refreshNetworkSummary()
         refreshVideoOutputSummary()
@@ -2672,6 +2720,7 @@ extension ReceiverViewController {
                 SettingsSection(CWL("连接与输出"), connection),
                 SettingsSection("CarPlay", [
                     .page(CWL("画面"), icon: ("rectangle.on.rectangle", .systemGreen), detail: { [unowned self] in
+                        if self.outputMode.isZXMoto { return "800×400 · H.264 · 30 FPS" }
                         if self.outputMode.zeehoProfile.map({ $0 != .zeeho62 }) == true || (self.outputMode.motorcycleProfile != nil && self.outputMode.motorcycleProfile?.transport != .thinkerRide) { return "跟随仪表上报尺寸" }
                         return self.outputMode.usesInstrumentWiFi ? CWL("仪表固定尺寸") : self.followsCarScreen ? CWL("跟随车机") : self.resolutionControl.selectedTitle.components(separatedBy: "（").first
                     }) { [unowned self] in self.displayPage() },
@@ -2752,6 +2801,12 @@ extension ReceiverViewController {
                         .info(CWL("仪表画面"), CWL("480×272 · JPEG · 最高 20 FPS")),
                         .info(CWL("本机 CarPlay"), "960×544 · H.264 · 30 FPS")
                     ]),
+                    SettingsSection(CWL("图标"), [.control(CWL("CarPlay 图标大小"), icon: ("square.grid.2x2.fill", .systemPurple), iconSizeControl)])
+                ]
+            }
+            if outputMode.isZXMoto {
+                return [
+                    SettingsSection(outputMode.title, [.info(CWL("仪表画面"), "800×400 · H.264 · 30 FPS")]),
                     SettingsSection(CWL("图标"), [.control(CWL("CarPlay 图标大小"), icon: ("square.grid.2x2.fill", .systemPurple), iconSizeControl)])
                 ]
             }
@@ -3065,6 +3120,13 @@ extension ReceiverViewController {
             case .carLife: return carLifeOutputSections()
             case .airPlay: return airPlayOutputSections()
             case .tailing: return tailingOutputSections()
+            case .zxmoto25, .zxmoto26:
+                return [SettingsSection(outputMode.title,
+                    footer: CWL("25款500RR 预设 192.168.13.1，26款500RR 预设 192.168.21.1，可手动修改。"), [
+                    .field(CWL("仪表 IP 地址"), zxmotoAddressField, placeholder: "192.168.21.1"),
+                    .field(CWL("镜像端口"), zxmotoPortField, placeholder: "11111"),
+                    .note(zxmotoStatus)
+                ])]
             case .zeeho, .zeehoAE4i, .zeehoSEPlus, .zeehoAE2:
                 let name: String
                 switch outputMode {
@@ -3158,6 +3220,7 @@ extension ReceiverViewController {
         if configuration.cfmotoProfile != nil { updateCfmotoStatus("正在推流到春风仪表…") }
         if configuration.ninebotAddress != nil { updateNinebotStatus(CWL("正在连接九号仪表…")) }
         if configuration.tailingAddress != nil { updateTailingStatus(CWL("正在连接台铃仪表…")) }
+        if configuration.zxmotoAddress != nil { updateZxMotoStatus(CWL("正在连接 ZxMoto 仪表…")) }
         if configuration.carLifeEnabled {
             updateCarLifeStatus(CWL("正在等待车机连接…"))
         }
