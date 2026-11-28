@@ -7,8 +7,10 @@ public record StreamProfile(int width, int height, int fps, int bitrate, int rot
     public enum Codec { H264, JPEG }
     public enum Scale { FIT, CROP, STRETCH }
     /** DIRECT sends the private RTP straight to UDP 5012 (five-inch / 4.3-inch). KCP wraps it in
-     *  the ikcp conv=3 reliable layer the seven-inch meter requires on the same port. */
-    public enum Transport { DIRECT, KCP, TAILING_TCP, ZEEHO_TCP }
+     *  the ikcp conv=3 reliable layer the seven-inch meter requires on the same port.
+     *  EASYCONN_TCP uses generic EasyConn / PXC reverse TCP (10930 probe + 10922/10921/10920)
+     *  with runtime resolution negotiation (e.g. QJMotor Sai600 HYTY75-1025 800x362). */
+    public enum Transport { DIRECT, KCP, TAILING_TCP, ZEEHO_TCP, EASYCONN_TCP }
     public StreamProfile(int width,int height,int fps,int bitrate,int rotation,Scale scale) {
         this(width,height,fps,bitrate,rotation,scale,Codec.H264,80,Transport.DIRECT);
     }
@@ -29,7 +31,13 @@ public record StreamProfile(int width, int height, int fps, int bitrate, int rot
     public static StreamProfile jpeg43(){return new StreamProfile(480,272,10,1500000,0,Scale.FIT,Codec.JPEG,80);}
     public static StreamProfile tailing43(){return new StreamProfile(480,272,20,1500000,0,Scale.FIT,Codec.JPEG,80,Transport.TAILING_TCP);}
     public static StreamProfile zeeho62(){return new StreamProfile(1024,480,25,2500000,0,Scale.FIT,Codec.H264,80,Transport.ZEEHO_TCP);}
-    public String label(){return transport==Transport.ZEEHO_TCP?"极核 6.2 寸 H.264 / TCP":transport==Transport.TAILING_TCP?"台铃 4.3 寸 JPEG / TCP":codec==Codec.JPEG?"九号 4.3 寸 JPEG（测试）":transport==Transport.KCP?"九号 7 寸 H.264 / KCP（实验）":"九号 H.264";}
+    /** QJMotor Sai600 (HYTY75-1025) / Generic EasyConn PXC: runtime dimensions negotiated over TCP 10921 (default 800x362). */
+    public static StreamProfile easyConnDefault(){return new StreamProfile(800,362,25,2500000,0,Scale.FIT,Codec.H264,80,Transport.EASYCONN_TCP);}
+    public StreamProfile withNegotiated(int nextWidth, int nextHeight, int nextFps) {
+        int clampedFps = Math.max(5, Math.min(30, nextFps));
+        return new StreamProfile(nextWidth, nextHeight, clampedFps, bitrate, rotation, scale, codec, jpegQuality, transport);
+    }
+    public String label(){return transport==Transport.EASYCONN_TCP?"钱江/亿连 PXC H.264 / TCP":transport==Transport.ZEEHO_TCP?"极核 6.2 寸 H.264 / TCP":transport==Transport.TAILING_TCP?"台铃 4.3 寸 JPEG / TCP":codec==Codec.JPEG?"九号 4.3 寸 JPEG（测试）":transport==Transport.KCP?"九号 7 寸 H.264 / KCP（实验）":"九号 H.264";}
     public String encode(){return width+","+height+","+fps+","+bitrate+","+rotation+","+scale.ordinal()+","+codec.ordinal()+","+jpegQuality+","+transport.ordinal();}
     public static StreamProfile decode(String text) {
         String[] v=text.split(",");
@@ -48,6 +56,8 @@ public record StreamProfile(int width, int height, int fps, int bitrate, int rot
     public StreamProfile {
         if(transport==Transport.ZEEHO_TCP && (codec!=Codec.H264 || width!=1024 || height!=480))
             throw new IllegalArgumentException("极核 TCP 模式需要 1024×480 H.264");
+        if(transport==Transport.EASYCONN_TCP && codec!=Codec.H264)
+            throw new IllegalArgumentException("亿连 PXC TCP 模式仅支持 H.264");
         if(transport==Transport.TAILING_TCP && codec!=Codec.JPEG)throw new IllegalArgumentException("台铃TCP模式仅支持JPEG");
         if(width<64||height<64||width>1920||height>1920||(long)width*height>2073600||width%2!=0||height%2!=0)
             throw new IllegalArgumentException("宽高须为64–1920之间的偶数，总像素不超过1920×1080");
