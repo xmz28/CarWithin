@@ -12,4 +12,8 @@ public final class DeviceCatalog {
     public static boolean tailingCandidate(String name) {
         return name!=null && name.matches("TL-DASH-[A-Fa-f0-9]{6}");
     }
+    /** Generic EasyConn / QJMotor P2P peers (e.g. "594200", "DIRECT-uh-594200", "QJ..."). */
+    public static boolean easyConnCandidate(String name) {
+        return name != null && !name.trim().isEmpty();
+    }
 }

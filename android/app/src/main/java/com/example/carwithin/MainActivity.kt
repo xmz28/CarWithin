@@ -84,9 +84,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.TextButton
+import com.journeyapps.barcodescanner.ScanContract
+import com.journeyapps.barcodescanner.ScanOptions
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -111,9 +115,77 @@ class MainActivity : ComponentActivity() {
             projection = null
         }
     }
+    private var pendingEasyConnAfterPerm = false
     private val permissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-        if (hasWifiPermission()) projection?.scan()
-        else projection?.record("请授予附近 Wi-Fi 设备或精确位置权限，然后重新扫描")
+        if (hasWifiPermission()) {
+            if (pendingEasyConnAfterPerm) {
+                pendingEasyConnAfterPerm = false
+                projection?.connectSavedEasyConn()
+            } else {
+                projection?.scan()
+            }
+        } else {
+            pendingEasyConnAfterPerm = false
+            projection?.record("请授予附近 Wi-Fi 设备或精确位置权限，然后重新连接")
+        }
+    }
+    private val cameraPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (granted) startQrScanner()
+        else android.widget.Toast.makeText(this, "请授予相机权限以扫描仪表二维码", android.widget.Toast.LENGTH_SHORT).show()
+    }
+    private val qrScanner = registerForActivityResult(ScanContract()) { result ->
+        val text = result.contents ?: return@registerForActivityResult
+        handleQrText(text, autoConnect = true)
+    }
+
+    private fun launchQrScan() {
+        if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            startQrScanner()
+        } else {
+            cameraPermission.launch(Manifest.permission.CAMERA)
+        }
+    }
+
+    private fun startQrScanner() {
+        val options = ScanOptions().apply {
+            setDesiredBarcodeFormats(ScanOptions.QR_CODE)
+            setPrompt("请对准摩托车仪表上的亿连投屏二维码")
+            setBeepEnabled(false)
+            setOrientationLocked(true)
+        }
+        qrScanner.launch(options)
+    }
+
+    private fun handleQrText(raw: String, autoConnect: Boolean) {
+        val svc = projection ?: return
+        svc.applyQrText(raw)
+            .onSuccess { parsed ->
+                val modeTip = if (parsed.recommendedMode() == EasyConnQrParser.LinkMode.WIFI_DIRECT) "WLAN 直连" else "车机热点"
+                android.widget.Toast.makeText(
+                    this,
+                    "已填入 ${parsed.ssid()}（$modeTip）",
+                    android.widget.Toast.LENGTH_SHORT,
+                ).show()
+                if (autoConnect) {
+                    connectEasyConnWithPermission(svc, parsed.recommendedMode())
+                }
+            }
+            .onFailure {
+                android.widget.Toast.makeText(this, "解析失败：${it.message}", android.widget.Toast.LENGTH_LONG).show()
+                svc.record("二维码解析失败：${it.message}")
+            }
+    }
+
+    private fun connectEasyConnWithPermission(svc: ProjectionService, mode: EasyConnQrParser.LinkMode) {
+        if (mode == EasyConnQrParser.LinkMode.WIFI_AP || hasWifiPermission()) {
+            svc.connectSavedEasyConn()
+        } else {
+            pendingEasyConnAfterPerm = true
+            permissions.launch(
+                if (Build.VERSION.SDK_INT >= 33) arrayOf(Manifest.permission.NEARBY_WIFI_DEVICES)
+                else arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
+            )
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -278,6 +350,36 @@ class MainActivity : ComponentActivity() {
                                 Group("连接与画面") {
                                     Setting(Icons.Outlined.Share, Blue, "当前输出", state.model.title) { showOutput(Page.SETTINGS) }
                                     Rule()
+                                    var showScale by remember { mutableStateOf(false) }
+                                    Box {
+                                        Setting(ImageVector.vectorResource(R.drawable.ic_output_screen), Indigo, "画面填充模式",
+                                            ProjectionService.scaleTitle(state.scale)) { showScale = true }
+                                        DropdownMenu(showScale, { showScale = false }) {
+                                            StreamProfile.Scale.values().forEach { mode ->
+                                                DropdownMenuItem(text = { Text(ProjectionService.scaleTitle(mode)) }, onClick = {
+                                                    service?.selectScale(mode)
+                                                    showScale = false
+                                                })
+                                            }
+                                        }
+                                    }
+                                    if (state.model.isEasyConn) {
+                                        Rule()
+                                        var showCanvas by remember { mutableStateOf(false) }
+                                        Box {
+                                            Setting(Icons.Outlined.Settings, Blue, "CarLife 画布尺寸", state.canvasPreset.title,
+                                                enabled = !state.carLifeRunning) { showCanvas = true }
+                                            DropdownMenu(showCanvas, { showCanvas = false }) {
+                                                CarLifeCanvasPreset.entries.forEach { preset ->
+                                                    DropdownMenuItem(text = { Text(preset.title) }, onClick = {
+                                                        service?.selectCanvasPreset(preset)
+                                                        showCanvas = false
+                                                    })
+                                                }
+                                            }
+                                        }
+                                    }
+                                    Rule()
                                     var expanded by remember { mutableStateOf(false) }
                                     Box {
                                         Setting(ImageVector.vectorResource(R.drawable.ic_frame_speed), Indigo, "画面帧率", "${state.fps} FPS",
@@ -291,7 +393,7 @@ class MainActivity : ComponentActivity() {
                                             }
                                         }
                                     }
-                                    Text("用于本机 CarLife 与九号 5 寸。其他仪表使用各自的投屏预设。",
+                                    Text("画面填充模式可在投屏过程中实时切换；CarLife 画布尺寸在重新启动 CarLife 后生效。",
                                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -365,6 +467,12 @@ class MainActivity : ComponentActivity() {
                                 Group("CarLife") {
                                     Setting(Icons.AutoMirrored.Outlined.ArrowForward, Blue, "仅连接 CarLife", enabled = !state.carLifeRunning && service != null) {
                                         service?.startCarLife()
+                                    }
+                                    Rule()
+                                    Setting(Icons.Outlined.Share, Indigo, "复制全部连接日志", enabled = state.logs.isNotEmpty()) {
+                                        val cm = getSystemService(android.content.ClipboardManager::class.java)
+                                        cm?.setPrimaryClip(android.content.ClipData.newPlainText("CarWithinLogs", state.logs.joinToString("\n")))
+                                        android.widget.Toast.makeText(this@MainActivity, "已复制 ${state.logs.size} 条日志", android.widget.Toast.LENGTH_SHORT).show()
                                     }
                                 }
                                 Group("连接日志") {
@@ -451,7 +559,7 @@ class MainActivity : ComponentActivity() {
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
                     Column(Modifier.weight(1f)) {
                         Text("本机 CarLife", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold)
-                        Text("OPPO Car+", color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        Text("小米 CarWith / OPPO Car+", color = MaterialTheme.colorScheme.onSurfaceVariant,
                             style = MaterialTheme.typography.bodySmall)
                     }
                     if (state.carLifeRunning) TextButton(onClick = fullScreen) { Text("全屏") }
@@ -469,12 +577,16 @@ class MainActivity : ComponentActivity() {
                     }
                 }
                 Text(state.source, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                if (!state.carLifeRunning) {
+                    Text("小米手机：先连蓝牙耳机/手表，点击下方启动后进入 CarWith → 百度 CarLife 无线连接 → 开始连接。",
+                        style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
                 Button(
                     onClick = {
                         if (state.carLifeRunning) service.stopCarLife()
                         else {
                             service.startCarLife(withInstrument = true, canReconnect = hasWifiPermission())
-                            openCarPlus(this@MainActivity, service)
+                            openCarLink(this@MainActivity, service)
                         }
                     },
                     modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
@@ -484,6 +596,18 @@ class MainActivity : ComponentActivity() {
         }
         Group("输出") {
             Setting(Icons.Outlined.Share, Indigo, "当前输出", state.model.title) { showOutput() }
+            if (state.model.isEasyConn) {
+                Rule()
+                val qrSummary = if (state.qrSsid.isBlank()) "点击扫码提取 Wi-Fi 与 ID"
+                else buildString {
+                    append(state.qrSsid)
+                    if (state.qrModelId.isNotBlank()) append(" · ID ").append(state.qrModelId)
+                }
+                Setting(Icons.Outlined.Search, Blue, "扫码配对仪表", qrSummary) {
+                    launchQrScan()
+                    showOutput()
+                }
+            }
             if (state.carLifeRunning || state.connected || state.outputRunning) {
                 Rule()
                 val status = when {
@@ -499,6 +623,144 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun Output(service: ProjectionService, state: ProjectionState) {
         var showModels by remember { mutableStateOf(false) }
+        var showPasteDialog by remember { mutableStateOf(false) }
+        var pasteInput by remember { mutableStateOf("") }
+
+        var ssidInput by remember { mutableStateOf(state.qrSsid) }
+        var pwdInput by remember { mutableStateOf(state.qrPassword) }
+        var macInput by remember { mutableStateOf(state.qrMac) }
+        var modelIdInput by remember { mutableStateOf(state.qrModelId) }
+        var linkModeInput by remember { mutableStateOf(state.qrLinkMode) }
+
+        LaunchedEffect(state.qrSsid, state.qrPassword, state.qrMac, state.qrModelId, state.qrLinkMode) {
+            ssidInput = state.qrSsid
+            pwdInput = state.qrPassword
+            macInput = state.qrMac
+            modelIdInput = state.qrModelId
+            linkModeInput = state.qrLinkMode
+        }
+
+        if (showPasteDialog) {
+            AlertDialog(
+                onDismissRequest = { showPasteDialog = false },
+                title = { Text("粘贴仪表二维码内容") },
+                text = {
+                    OutlinedTextField(
+                        value = pasteInput,
+                        onValueChange = { pasteInput = it },
+                        label = { Text("http://www.carbit.com.cn/...") },
+                        minLines = 3,
+                        maxLines = 6,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                },
+                confirmButton = {
+                    TextButton(onClick = {
+                        val text = pasteInput
+                        showPasteDialog = false
+                        handleQrText(text, autoConnect = false)
+                    }) { Text("提取并填入") }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showPasteDialog = false }) { Text("取消") }
+                },
+            )
+        }
+
+        if (state.model.isEasyConn) {
+            Group("扫码配对（自动提取密码与 ID）") {
+                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Button(
+                            onClick = ::launchQrScan,
+                            modifier = Modifier.weight(1f).heightIn(min = 44.dp),
+                            shape = RoundedCornerShape(10.dp),
+                        ) { Text("扫仪表二维码") }
+                        OutlinedButton(
+                            onClick = {
+                                val cm = getSystemService(android.content.ClipboardManager::class.java)
+                                val clip = cm?.primaryClip?.getItemAt(0)?.coerceToText(this@MainActivity)?.toString().orEmpty()
+                                pasteInput = clip
+                                showPasteDialog = true
+                            },
+                            modifier = Modifier.weight(1f).heightIn(min = 44.dp),
+                            shape = RoundedCornerShape(10.dp),
+                        ) { Text("粘贴二维码") }
+                    }
+                    OutlinedTextField(
+                        value = ssidInput,
+                        onValueChange = { ssidInput = it },
+                        label = { Text("Wi-Fi / 直连名称 (SSID)") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    OutlinedTextField(
+                        value = pwdInput,
+                        onValueChange = { pwdInput = it },
+                        label = { Text("Wi-Fi 密码 (pwd)") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        OutlinedTextField(
+                            value = modelIdInput,
+                            onValueChange = { modelIdInput = it },
+                            label = { Text("型号 ID (modelid)") },
+                            singleLine = true,
+                            modifier = Modifier.weight(1f),
+                        )
+                        OutlinedTextField(
+                            value = macInput,
+                            onValueChange = { macInput = it },
+                            label = { Text("仪表 MAC") },
+                            singleLine = true,
+                            modifier = Modifier.weight(1.3f),
+                        )
+                    }
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        val isDirect = linkModeInput == EasyConnQrParser.LinkMode.WIFI_DIRECT
+                        if (isDirect) {
+                            Button(
+                                onClick = { linkModeInput = EasyConnQrParser.LinkMode.WIFI_DIRECT },
+                                modifier = Modifier.weight(1f),
+                                shape = RoundedCornerShape(10.dp),
+                            ) { Text("WLAN 直连") }
+                            OutlinedButton(
+                                onClick = { linkModeInput = EasyConnQrParser.LinkMode.WIFI_AP },
+                                modifier = Modifier.weight(1f),
+                                shape = RoundedCornerShape(10.dp),
+                            ) { Text("车机热点") }
+                        } else {
+                            OutlinedButton(
+                                onClick = { linkModeInput = EasyConnQrParser.LinkMode.WIFI_DIRECT },
+                                modifier = Modifier.weight(1f),
+                                shape = RoundedCornerShape(10.dp),
+                            ) { Text("WLAN 直连") }
+                            Button(
+                                onClick = { linkModeInput = EasyConnQrParser.LinkMode.WIFI_AP },
+                                modifier = Modifier.weight(1f),
+                                shape = RoundedCornerShape(10.dp),
+                            ) { Text("车机热点") }
+                        }
+                    }
+                    Button(
+                        onClick = {
+                            service.saveQrConfig(ssidInput, pwdInput, macInput, modelIdInput, linkModeInput)
+                            connectEasyConnWithPermission(service, linkModeInput)
+                        },
+                        enabled = !state.connected && !state.connecting && ssidInput.isNotBlank(),
+                        modifier = Modifier.fillMaxWidth().heightIn(min = 46.dp),
+                        shape = RoundedCornerShape(12.dp),
+                    ) { Text(if (state.connected) "仪表已连接" else if (state.connecting) "正在连接…" else "保存并连接仪表") }
+                    Text(
+                        "扫码会自动提取名称、密码、MAC 与 ModelID。钱江赛600 等直连仪表选「WLAN 直连」；春风/贝纳利等热点仪表选「车机热点」。",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
+        }
+
         Group("输出设置") {
             Box {
                 Setting(Icons.Outlined.Share, Indigo, "当前输出", state.model.title,
@@ -516,9 +778,24 @@ class MainActivity : ComponentActivity() {
             Setting(Icons.Outlined.CheckCircle, Blue, state.connection)
             if (!state.connected && !state.connecting) {
                 Rule()
-                Setting(Icons.Outlined.Search, Blue, "扫描仪表", onClick = ::scan)
+                Setting(Icons.Outlined.Search, Blue, "扫描 P2P 仪表", onClick = ::scan)
+                if (state.model.isEasyConn) {
+                    Rule()
+                    Setting(Icons.Outlined.Refresh, Indigo, "接管当前已连 WLAN 直连") {
+                        if (hasWifiPermission()) service.adoptActiveP2p()
+                        else scan()
+                    }
+                    Rule()
+                    Setting(Icons.Outlined.Refresh, Orange, "接管当前已连系统 Wi-Fi") {
+                        service.adoptCurrentWifi()
+                    }
+                }
                 state.peers.filter { state.model.matches(it.deviceName) }
-                    .sortedBy { it.deviceName.orEmpty() }.forEach { device ->
+                    .sortedWith(compareByDescending<android.net.wifi.p2p.WifiP2pDevice> {
+                        val n = it.deviceName.orEmpty()
+                        (state.qrSsid.isNotBlank() && n.contains(state.qrSsid, ignoreCase = true)) ||
+                            n.startsWith("QJ", ignoreCase = true) || n.startsWith("DIRECT-")
+                    }.thenBy { it.deviceName.orEmpty() }).forEach { device ->
                         Rule()
                         Setting(ImageVector.vectorResource(R.drawable.ic_output_screen), Indigo, device.deviceName.orEmpty(), device.deviceAddress.orEmpty()) {
                             service.connect(device)
@@ -532,6 +809,20 @@ class MainActivity : ComponentActivity() {
         }
         Group("投屏") {
             Text(state.output, Modifier.padding(16.dp), style = MaterialTheme.typography.bodyMedium)
+            Rule()
+            var showScaleHere by remember { mutableStateOf(false) }
+            Box {
+                Setting(ImageVector.vectorResource(R.drawable.ic_output_screen), Indigo, "画面填充模式",
+                    ProjectionService.scaleTitle(state.scale)) { showScaleHere = true }
+                DropdownMenu(showScaleHere, { showScaleHere = false }) {
+                    StreamProfile.Scale.values().forEach { mode ->
+                        DropdownMenuItem(text = { Text(ProjectionService.scaleTitle(mode)) }, onClick = {
+                            service.selectScale(mode)
+                            showScaleHere = false
+                        })
+                    }
+                }
+            }
             Rule()
             if (state.outputRunning) {
                 Setting(ImageVector.vectorResource(R.drawable.ic_stop_screen), Red, "停止仪表投屏") { service.pauseOutput() }
@@ -572,7 +863,19 @@ class MainActivity : ComponentActivity() {
         super.onDestroy()
     }
 
-    private fun openCarPlus(activity: Activity, service: ProjectionService) {
+    private fun openCarLink(activity: Activity, service: ProjectionService) {
+        // 1. Xiaomi CarWith open settings / connection entry
+        val miAction = Intent("miui.intent.action.UCAR_CONNECT_SETTINGS")
+        if (runCatching { activity.startActivity(miAction) }.isSuccess) {
+            service.record("已打开小米 CarWith，请进入百度 CarLife 无线连接并点击开始连接")
+            return
+        }
+        val miLauncher = packageManager.getLaunchIntentForPackage("com.miui.carlink")
+        if (miLauncher != null && runCatching { activity.startActivity(miLauncher) }.isSuccess) {
+            service.record("已打开小米 CarWith，请进入百度 CarLife 无线连接并点击开始连接")
+            return
+        }
+        // 2. Fallback: OPPO Car+
         val carPlus = "com.oplus.ocar"
         val direct = Intent().setComponent(ComponentName(carPlus, "$carPlus.CarlifeActivity"))
         if (runCatching { activity.startActivity(direct) }.isSuccess) return
@@ -580,7 +883,7 @@ class MainActivity : ComponentActivity() {
         if (menu != null && runCatching { activity.startActivity(menu) }.isSuccess) {
             service.record("已打开 Car+，请进入 CarLife 连接界面")
         } else {
-            service.record("无法直接打开 Car+，请从系统车联界面手动进入 CarLife")
+            service.record("未自动跳转车联页，请手动打开小米 CarWith → 百度 CarLife 无线连接")
         }
     }
 }

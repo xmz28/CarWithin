@@ -27,6 +27,7 @@ public final class P2pController {
     private final WifiP2pManager manager;
     private WifiP2pManager.Channel channel;
     private Target target;
+    private boolean relaxedOwnerMatch;
     private Route route;
     private int generation, verification;
     private boolean closed, connecting, awaitingGroup;
@@ -89,10 +90,15 @@ public final class P2pController {
     }
 
     public void connect(Target wanted, boolean automatic) {
+        connect(wanted, automatic, false);
+    }
+
+    public void connect(Target wanted, boolean automatic, boolean relaxedOwner) {
         if(!ready() || connecting)return;
         if(route!=null && route.target().equals(wanted))return;
         int gen=++generation;
         target=wanted;
+        relaxedOwnerMatch=relaxedOwner;
         invalidate();
         connecting=true;
         awaitingGroup=false;
@@ -115,7 +121,32 @@ public final class P2pController {
             if(!current(gen) || !connecting)return;
             fail("P2P 连接超时，请检查仪表投屏模式后重试");
             if(ready())manager.cancelConnect(channel,null);
-        },30000);
+        },35000);
+    }
+
+    /** Adopts an already-formed Wi-Fi Direct group (e.g. formed in system settings or a previous round). */
+    public void adoptActiveGroup(String fallbackName) {
+        if(!ready() || connecting)return;
+        int gen=++generation;
+        relaxedOwnerMatch=true;
+        invalidate();
+        connecting=true;
+        awaitingGroup=true;
+        updateStatus("正在检测当前已连接的 WLAN 直连组…");
+        manager.requestGroupInfo(channel,group->{
+            if(!current(gen))return;
+            if(group==null || group.isGroupOwner() || group.getOwner()==null) {
+                fail("当前没有已连接的车机 WLAN 直连组，请点击扫描仪表连接");
+                return;
+            }
+            WifiP2pDevice owner=group.getOwner();
+            String devName=(owner.deviceName!=null && !owner.deviceName.isBlank()) ? owner.deviceName
+                    : (group.getNetworkName()!=null && !group.getNetworkName().isBlank() ? group.getNetworkName() : fallbackName);
+            String mac=(owner.deviceAddress!=null && owner.deviceAddress.matches("(?i)(?:[0-9a-f]{2}:){5}[0-9a-f]{2}"))
+                    ? owner.deviceAddress : "02:00:00:00:00:00";
+            target=new Target(devName,mac);
+            verify(gen);
+        });
     }
 
     private void findTarget(int gen, long deadline, boolean startDiscovery) {
@@ -123,7 +154,10 @@ public final class P2pController {
         manager.requestPeers(channel,list->{
             if(!current(gen))return;
             for(WifiP2pDevice peer:list.getDeviceList()) {
-                if(target.matches(peer.deviceName,peer.deviceAddress)) {
+                boolean hit = relaxedOwnerMatch
+                        ? target.matchesEasyConnPeer(peer.deviceName, peer.deviceAddress)
+                        : target.matches(peer.deviceName, peer.deviceAddress);
+                if(hit) {
                     startConnect(gen,peer.deviceAddress);
                     return;
                 }
@@ -151,8 +185,10 @@ public final class P2pController {
 
     private boolean matchesGroup(WifiP2pGroup group) {
         WifiP2pDevice owner=group.getOwner();
-        return !group.isGroupOwner() && owner!=null &&
-                target.matchesOwner(owner.deviceName,group.getNetworkName(),owner.deviceAddress);
+        if (group.isGroupOwner() || owner==null || target==null) return false;
+        return relaxedOwnerMatch
+                ? target.matchesEasyConnOwner(owner.deviceName,group.getNetworkName(),owner.deviceAddress)
+                : target.matchesOwner(owner.deviceName,group.getNetworkName(),owner.deviceAddress);
     }
 
     private void updateStatus(String message) {
@@ -192,22 +228,21 @@ public final class P2pController {
                 }
                 try {
                     if(!(info.groupOwnerAddress instanceof Inet4Address))throw new IllegalStateException("未获得仪表 IPv4");
-                    String iface=group.getInterface();NetworkInterface ni=NetworkInterface.getByName(iface);
-                    if(ni==null)throw new IllegalStateException("P2P 接口尚未就绪");
-                    Inet4Address local=null;
-                    for(InetAddress ip:Collections.list(ni.getInetAddresses()))if(ip instanceof Inet4Address&&!ip.isLoopbackAddress())local=(Inet4Address)ip;
+                    Inet4Address gateway=(Inet4Address)info.groupOwnerAddress;
+                    String iface=group.getInterface();
+                    Inet4Address local=findLocalIpv4(iface,gateway);
                     if(local==null) {retryVerification(gen,check);return;}
                     ConnectivityManager cm=(ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
                     Network network=null;
                     for(Network n:cm.getAllNetworks()) {
                         LinkProperties lp=cm.getLinkProperties(n);
-                        if(lp!=null && iface.equals(lp.getInterfaceName()))network=n;
+                        if(lp!=null && iface!=null && iface.equals(lp.getInterfaceName()))network=n;
                     }
-                    Route next=new Route(target,iface,local,(Inet4Address)info.groupOwnerAddress,network);
+                    Route next=new Route(target,iface!=null?iface:"p2p0",local,gateway,network);
                     connecting=false;
                     if(route!=null && route.equals(next))return;
                     if(route!=null)invalidate();route=next;
-                    listener.log("身份已核对："+target.mac()+"，"+iface+" "+local.getHostAddress()+" → "+next.remote().getHostAddress());
+                    listener.log("身份已核对："+target.name()+" ("+group.getNetworkName()+")，"+next.iface()+" "+local.getHostAddress()+" → "+gateway.getHostAddress());
                     listener.route(next);
                 } catch(Exception e){
                     if(connecting)retryVerification(gen,check);
@@ -216,6 +251,48 @@ public final class P2pController {
             });
         });
     }
+    private static Inet4Address findLocalIpv4(String iface, Inet4Address gateway) throws SocketException {
+        Inet4Address fallback = null;
+        if (iface != null && !iface.isBlank()) {
+            NetworkInterface ni = NetworkInterface.getByName(iface);
+            if (ni != null) {
+                for (InterfaceAddress ia : ni.getInterfaceAddresses()) {
+                    if (ia.getAddress() instanceof Inet4Address ip && !ip.isLoopbackAddress() && !ip.equals(gateway)) {
+                        if (sharesSubnet(ip, ia.getNetworkPrefixLength(), gateway)) return ip;
+                        if (fallback == null) fallback = ip;
+                    }
+                }
+            }
+        }
+        Enumeration<NetworkInterface> all = NetworkInterface.getNetworkInterfaces();
+        if (all != null) {
+            while (all.hasMoreElements()) {
+                NetworkInterface ni = all.nextElement();
+                if (!ni.isUp() || ni.isLoopback()) continue;
+                String name = ni.getName();
+                if (iface != null && !iface.isBlank() && !iface.equals(name) && !name.startsWith("p2p")) continue;
+                for (InterfaceAddress ia : ni.getInterfaceAddresses()) {
+                    if (ia.getAddress() instanceof Inet4Address ip && !ip.isLoopbackAddress() && !ip.equals(gateway)) {
+                        if (sharesSubnet(ip, ia.getNetworkPrefixLength(), gateway)) return ip;
+                        if (fallback == null && name.startsWith("p2p")) fallback = ip;
+                    }
+                }
+            }
+        }
+        return fallback;
+    }
+
+    private static boolean sharesSubnet(Inet4Address local, short prefixLen, Inet4Address gateway) {
+        if (prefixLen < 1 || prefixLen > 32) return false;
+        int mask = -1 << (32 - prefixLen);
+        return (ipv4ToInt(local) & mask) == (ipv4ToInt(gateway) & mask);
+    }
+
+    private static int ipv4ToInt(Inet4Address addr) {
+        byte[] b = addr.getAddress();
+        return ((b[0] & 0xFF) << 24) | ((b[1] & 0xFF) << 16) | ((b[2] & 0xFF) << 8) | (b[3] & 0xFF);
+    }
+
     private void retryVerification(int gen, int check) {
         if(connecting)main.postDelayed(()->{if(current(gen)&&verification==check)verify(gen);},500);
     }

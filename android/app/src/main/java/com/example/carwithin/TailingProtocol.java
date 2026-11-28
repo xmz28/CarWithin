@@ -39,7 +39,7 @@ public final class TailingProtocol {
     }
     public static byte[] exact(InputStream in,int size)throws IOException {
         byte[] b=new byte[size];int offset=0;
-        while(offset<size){int n=in.read(b,offset,size-offset);if(n<0)throw new EOFException("台铃连接已关闭");offset+=n;}
+        while(offset<size){int n=in.read(b,offset,size-offset);if(n<0)throw new EOFException("仪表连接已关闭");offset+=n;}
         return b;
     }
     public static void writeJpeg(OutputStream out,byte[] jpeg)throws IOException {

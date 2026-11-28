@@ -32,11 +32,12 @@ public final class MirrorSession {
     private volatile boolean stopped;
     private volatile DatagramSocket video,control;
     private volatile TailingConnection tailing;
+    private volatile EasyConnPxcConnection easyConn;
 
     public MirrorSession(android.content.Context context,P2pController.Route route,File capture,boolean repeatKey,StreamProfile profile,FrameSource source,Listener listener) {
         this.context=context.getApplicationContext();this.route=route;this.capture=capture;this.repeatKey=repeatKey;this.profile=profile;this.listener=listener;
         this.source=source!=null?source:(canvas,paint,frame)->{
-            canvas.save();canvas.scale(profile.width()/848f,profile.height()/480f);TestPattern.draw(canvas,paint,frame,profile.fps());canvas.restore();return true;
+            canvas.save();canvas.scale(canvas.getWidth()/848f,canvas.getHeight()/480f);TestPattern.draw(canvas,paint,frame,profile.fps());canvas.restore();return true;
         };
     }
     public void stop() {
@@ -46,7 +47,11 @@ public final class MirrorSession {
             if(profile.transport()==StreamProfile.Transport.ZEEHO_TCP)connection.cancelVideoRead();
             else connection.close();
         }
-
+        EasyConnPxcConnection ec=easyConn;
+        if(ec!=null) {
+            ec.cancelVideoRead();
+            ec.close();
+        }
     }
     private DatagramSocket socket(int port) throws Exception {
         DatagramSocket s=new DatagramSocket(null);
@@ -62,30 +67,40 @@ public final class MirrorSession {
         if(profile.transport()==StreamProfile.Transport.TAILING_TCP && route!=null){runTailing();return;}
         if(profile.codec()==StreamProfile.Codec.JPEG){runJpeg();return;}
         boolean zeeho=profile.transport()==StreamProfile.Transport.ZEEHO_TCP && route!=null;
+        boolean isEasyConn=profile.transport()==StreamProfile.Transport.EASYCONN_TCP && route!=null;
+        boolean tcpPull=zeeho || isEasyConn;
         TailingConnection pxc=zeeho?new TailingConnection(context,route,profile,listener):null;
+        EasyConnPxcConnection ec=isEasyConn?new EasyConnPxcConnection(context,route,listener):null;
         tailing=pxc;
+        easyConn=ec;
+        StreamProfile activeProfile=profile;
         MediaCodec codec=null;GpuEncoderSurface gpu=null;Bitmap bitmap=null;FileOutputStream saved=null;
         long[] packets={0},bytes={0};int frames=0,replies=0,counter=0;long lastReply=0;
         try {
             if(stopped)return;
             boolean self=route==null;
-            if(pxc!=null)pxc.start();
+            if(ec!=null) {
+                ec.start();
+                activeProfile=profile.withNegotiated(ec.getNegotiatedWidth(),ec.getNegotiatedHeight(),ec.getNegotiatedFps());
+            }
+            else if(pxc!=null)pxc.start();
             else if(!self) {
                 video=socket(5012);control=socket(5013);
                 listener.log("UDP 已绑定 "+route.local().getHostAddress()+":5012/5013 → "+route.remote().getHostAddress()+
                     (route.network()==null?"（P2P 本地地址绑定）":"（P2P Network 绑定）"));
             }
             if(capture!=null)saved=new FileOutputStream(capture);
-            int width=profile.width(),height=profile.height();
+            int width=activeProfile.width(),height=activeProfile.height();
+            int targetBitrate=isEasyConn?Math.max(1500000,Math.min(5000000,2500000*activeProfile.fps()/25)):activeProfile.bitrate();
             MediaFormat format=MediaFormat.createVideoFormat("video/avc",width,height);
             format.setInteger(MediaFormat.KEY_COLOR_FORMAT,MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
-            format.setInteger(MediaFormat.KEY_BIT_RATE,profile.bitrate());format.setInteger(MediaFormat.KEY_FRAME_RATE,profile.fps());
+            format.setInteger(MediaFormat.KEY_BIT_RATE,targetBitrate);format.setInteger(MediaFormat.KEY_FRAME_RATE,activeProfile.fps());
             format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL,1);
             format.setInteger(MediaFormat.KEY_PRIORITY,0);
             format.setInteger(MediaFormat.KEY_LATENCY,1); // Encoder hint; actual support is device dependent.
             if(Build.VERSION.SDK_INT>=29)format.setInteger(MediaFormat.KEY_MAX_B_FRAMES,0);
             format.setInteger(MediaFormat.KEY_PROFILE,MediaCodecInfo.CodecProfileLevel.AVCProfileBaseline);
-            int level=profile.avcLevel();
+            int level=activeProfile.avcLevel();
             format.setInteger(MediaFormat.KEY_LEVEL,level==30?MediaCodecInfo.CodecProfileLevel.AVCLevel3:level==31?MediaCodecInfo.CodecProfileLevel.AVCLevel31:MediaCodecInfo.CodecProfileLevel.AVCLevel4);
             String name=new MediaCodecList(MediaCodecList.REGULAR_CODECS).findEncoderForFormat(format);
             try {
@@ -103,7 +118,7 @@ public final class MirrorSession {
                 codec=MediaCodec.createByCodecName(name);codec.configure(format,null,null,MediaCodec.CONFIGURE_FLAG_ENCODE);codec.start();
             }
             if(Build.VERSION.SDK_INT>=29)listener.log("编码器能力：硬件加速="+codec.getCodecInfo().isHardwareAccelerated()+"，纯软件="+codec.getCodecInfo().isSoftwareOnly());
-            listener.log("编码器 "+name+"，"+width+"×"+height+" Baseline / "+profile.fps()+"fps / "+profile.bitrate()/1000+"kbps；约每0.5秒请求关键帧");
+            listener.log("编码器 "+name+"，"+width+"×"+height+" Baseline / "+activeProfile.fps()+"fps / "+targetBitrate/1000+"kbps；约每0.5秒请求关键帧");
             bitmap=Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888);
             Canvas canvas=new Canvas(bitmap);Paint paint=new Paint(Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG);
             int[] rgb=gpu==null?new int[width*height]:null;
@@ -149,7 +164,7 @@ public final class MirrorSession {
             long inputMaxNs=0,lastOutputNs=0,outputGapMaxNs=0;int keyCount=0,maxFrameBytes=0;
             while(!stopped && (!self || SystemClock.elapsedRealtime()-began<3000)) {
                 long now=SystemClock.elapsedRealtime();
-                if((kcpRef==null || kcpRef.waitSnd()<256) && inFlight.size()<2 && FramePacing.shouldSubmit(now,nextFrame,lastSubmittedAt,source.hasFreshFrame(),profile.fps())) {
+                if((kcpRef==null || kcpRef.waitSnd()<256) && inFlight.size()<2 && FramePacing.shouldSubmit(now,nextFrame,lastSubmittedAt,source.hasFreshFrame(),activeProfile.fps())) {
                     if(now>=nextSync) {Bundle b=new Bundle();b.putInt(MediaCodec.PARAMETER_KEY_REQUEST_SYNC_FRAME,0);codec.setParameters(b);nextSync=now+500;}
                     long drawStartedNs=SystemClock.elapsedRealtimeNanos();
                     int input=source.draw(canvas,paint,submitted)?(gpu!=null?0:codec.dequeueInputBuffer(0)):-1;
@@ -169,7 +184,7 @@ public final class MirrorSession {
                         long captured=source.captureStartedNs(),ready=source.readyNs();
                         inFlight.put(pts,new Pending(captured>0?captured:drawStartedNs,ready>0?ready:drawStartedNs,drawStartedNs,queuedNs,source.freshFrame()));submitted++;
                         source.submitted();lastSubmittedAt=now;
-                        nextFrame=FramePacing.nextDeadline(now,nextFrame,profile.fps());
+                        nextFrame=FramePacing.nextDeadline(now,nextFrame,activeProfile.fps());
                     }
                 }
                 int output;
@@ -200,7 +215,11 @@ public final class MirrorSession {
                     long timestamp=Math.max(0,(info.presentationTimeUs-firstPts)/1000);
                     if(saved!=null)saved.write(data);
                     long sendStartedNs=SystemClock.elapsedRealtimeNanos();
-                    if(pxc!=null) {
+                    if(ec!=null) {
+                        ec.sendAvc(data);
+                        packets[0]++;
+                        bytes[0]+=data.length;
+                    } else if(pxc!=null) {
                         pxc.sendAvc(data);
                         packets[0]++;
                         bytes[0]+=data.length;
@@ -247,9 +266,9 @@ public final class MirrorSession {
                 if(now>=nextStats) {
                     long elapsed=Math.max(1,now-lastStatsAt);
                     String rates=String.format(Locale.US,"来源 %.1f FPS · 编码 %.1f FPS",(sourceFrames-lastSourceFrames)*1000.0/elapsed,(frames-lastEncodedFrames)*1000.0/elapsed);
-                    listener.stats((self?"本机自检":"发送中")+" · "+rates+"\n累计编码 "+frames+" 帧 · "+(zeeho?"TCP":"RTP")+" "+packets[0]+" 包 / "+bytes[0]/1024+" KiB\n"+
-                        (self?"未发送网络数据":zeeho?"仪表已请求 "+packets[0]+" 帧": "仪表 RTCP 回应 "+replies+" 次"+(lastReply==0?"；尚无回应":"；距上次 "+(now-lastReply)/1000+" 秒")));
-                    listener.log("FPS："+rates+"，目标 "+profile.fps()+" FPS");
+                    listener.stats((self?"本机自检":"发送中")+" · "+rates+"\n累计编码 "+frames+" 帧 · "+(tcpPull?"TCP":"RTP")+" "+packets[0]+" 包 / "+bytes[0]/1024+" KiB\n"+
+                        (self?"未发送网络数据":tcpPull?"仪表已请求 "+packets[0]+" 帧": "仪表 RTCP 回应 "+replies+" 次"+(lastReply==0?"；尚无回应":"；距上次 "+(now-lastReply)/1000+" 秒")));
+                    listener.log("FPS："+rates+"，目标 "+activeProfile.fps()+" FPS");
                     if(kcpRef!=null)listener.log("KCP待确认/排队："+kcpRef.waitSnd()+"段");
                     listener.log(String.format(Locale.US,"手机耗时：画面合成+输入准备 %.1f ms/帧，编码提交至输出 %.1f ms/帧，待编码 %d 帧（非端到端延迟）",
                         conversionNs/1e6/Math.max(1,conversionCount),codecNs/1e6/Math.max(1,codecCount),inFlight.size()));
@@ -266,10 +285,11 @@ public final class MirrorSession {
                 }
                 LockSupport.parkNanos(1000000);
             }
-            listener.log((self?"SELF_TEST_OK":"发送结束")+"：来源更新 "+sourceFrames+" 帧，编码 "+frames+" 帧，封包 "+packets[0]+" 个"+(zeeho?"（TCP）":"，RTCP 回应 "+replies+" 次")+
+            listener.log((self?"SELF_TEST_OK":"发送结束")+"：来源更新 "+sourceFrames+" 帧，编码 "+frames+" 帧，封包 "+packets[0]+" 个"+(tcpPull?"（TCP）":"，RTCP 回应 "+replies+" 次")+
                 (capture==null?"":"，本机视频="+capture.getName()));
         } catch(Exception e) {if(!stopped)listener.log("会话失败："+e.getClass().getSimpleName()+" / "+e.getMessage());}
         finally {
+            if(ec!=null){ec.finishMedia();ec.close();easyConn=null;}
             if(pxc!=null){pxc.finishMedia();pxc.close();tailing=null;}
             if(control!=null) {try {byte[] b=NinebotProtocol.bye();control.send(new DatagramPacket(b,b.length));}catch(Exception ignored){} control.close();control=null;}
             if(video!=null){video.close();video=null;}
